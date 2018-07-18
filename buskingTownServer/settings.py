@@ -59,6 +59,9 @@ REST_FRAMEWORK = {
         #Ouath2 토큰 (소셜로그인에 사용)
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # 디폴트 인증 클래스 추가
     ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    )
 }
 
 MIDDLEWARE = [
@@ -144,3 +147,5 @@ STATIC_URL = '/static/'
 # Media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240

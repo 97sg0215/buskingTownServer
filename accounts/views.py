@@ -1,7 +1,13 @@
 # 클래스 기반의 Rest CRUD 처리
+from django.http import Http404, HttpResponse, JsonResponse
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.parsers import FormParser, FileUploadParser, JSONParser
+from rest_framework.utils import json
+from rest_framework.views import APIView
+
+from accounts import permissions
 from accounts.serializers import *
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import generics
@@ -21,7 +27,16 @@ class UserDetail(viewsets.ModelViewSet):
 
 class Certification(generics.CreateAPIView):
     queryset = Busker.objects.all()
-    serializer_class = BuskerSerializer
+    parser_classes = (FormParser,)
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        serializer_class = BuskerSerializer(data=request.data)
+        if serializer_class.is_valid():
+            serializer_class.save()
+            return Response(serializer_class.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SignUp(generics.CreateAPIView):
     queryset = User.objects.all()

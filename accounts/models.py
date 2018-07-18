@@ -20,15 +20,11 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 class Busker(models.Model):
+    busker_image = ImageField(upload_to='busker_profile_image/', null=True, blank=True)
     user = models.OneToOneField(User, null=True, unique=False, on_delete=models.CASCADE)
     busker_name = models.CharField(null=True, max_length=50, blank=True)
     team_name = models.CharField(null=True, max_length=50, blank=True)
     busker_tag = models.CharField(null=True, max_length=200, blank=True)
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
+    busker_image = ImageField(upload_to='busker_profile_image/', null=True, blank=True)
     certification = models.BooleanField(default=False, blank=True)
-
-class BuskerPhoto(models.Model):
-    owner = models.ForeignKey('auth.User', related_name='image', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='busker_profile_image/', max_length=254)
-
-

@@ -38,4 +38,6 @@ urlpatterns = [
     #로그인,회원가입 등의 사용자 관리 url
     url(r'^accounts/', include('accounts.urls')),
 
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    url(r'^busking/', include('busking.urls')),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

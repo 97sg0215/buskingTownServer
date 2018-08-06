@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     # custom app
     'accounts',
+    'busking',
 ]
 
 AUTH_PROFILE_MODULE = 'accounts.Profile'

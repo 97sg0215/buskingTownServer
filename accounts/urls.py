@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^login/$', views.CustomObtainAuthToken.as_view()),
     url(r'^sign_up/$', views.SignUp.as_view()),
     url(r'^certification/$', views.Certification.as_view()),
+    url(r'^delete/(?P<pk>\d+)/$', views.Certification.as_view(), name='delete_event'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

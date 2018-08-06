@@ -1,10 +1,14 @@
 from rest_framework.decorators import parser_classes
+from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import MultiPartParser
 
 from accounts.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from accounts.models import Profile
+from busking.models import BuskerRank
+from busking.models import BuskerRank
+from busking.serializers import BuskerRankSerializer
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -29,30 +33,15 @@ class ProfileSerializer(serializers.ModelSerializer):
 class BuskerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Busker
-        fields = ('user', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification')
-    #
-    # # 신규 버스커 instance를 생성해서 리턴해준다
-    # def create(self, validated_data):
-    #     return Busker.objects.create(**validated_data)
-    #
-    # # 생성되어 있는 버스커 instance 를 저장한 후 리턴해준다
-    # def update(self, instance, validated_data):
-    #     instance.user = validated_data.get('user', instance.user)
-    #     instance.busker_name = validated_data.get('busker_name', instance.busker_name)
-    #     instance.team_name = validated_data.get('team_name', instance.team_name)
-    #     instance.busker_phone = validated_data.get('busker_phone', instance.busker_phone)
-    #     instance.busker_tag = validated_data.get('busker_tag', instance.busker_tag)
-    #     instance.busker_image = validated_data.get('busker_image', instance.busker_image)
-    #     instance.certification = validated_data.get('certification', instance.certification)
-    #     instance.save()
-    #     return instance
+        fields = ('user', 'busker_id', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification')
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(required=True)
     busker = BuskerSerializer(required=True)
+    busker_rank = BuskerRankSerializer(required=True,write_only=True)
     class Meta:
         model = User
-        fields = ('url', 'email', 'username', 'profile', 'busker')
+        fields = ('url', 'email', 'username', 'profile', 'busker', 'busker_rank')
 
     def create(self, validated_data):
         # create user
@@ -74,6 +63,7 @@ class UserSerializer(serializers.ModelSerializer):
         # create profile
         busker = Busker.objects.create(
             user=user,
+            busker_id=busker_data['busker_id'],
             busker_name=busker_data['busker_name'],
             team_name=busker_data['team_name'],
             busker_phone=busker_data['busker_phone'],
@@ -81,6 +71,14 @@ class UserSerializer(serializers.ModelSerializer):
             busker_image=busker_data['busker_image'],
             certification=busker_data['certification']
         )
+
+        busker_rank_data = validated_data.pop('busker_rank')
+        busker_rank = BuskerRank.objects.create(
+            user=user,
+            follower=busker_rank_data['follower'],
+            coin=busker_rank_data['coin']
+        )
+
         return user
 
 class SignUpSerializer(serializers.ModelSerializer):

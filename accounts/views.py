@@ -1,6 +1,8 @@
 # 클래스 기반의 Rest CRUD 처리
 from django.http import Http404, HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import FormParser, FileUploadParser, JSONParser
 from rest_framework.utils import json
 from rest_framework.views import APIView
@@ -27,8 +29,20 @@ class UserDetail(viewsets.ModelViewSet):
 
 class Certification(generics.CreateAPIView):
     queryset = Busker.objects.all()
+    serializer_class = BuskerSerializer
     parser_classes = (FormParser,)
     parser_classes = (MultiPartParser, FormParser)
+
+    def get_object(self, pk):
+        try:
+            return Busker.objects.get(pk=pk)
+        except Busker.DoesNotExist:
+            raise Http404
+    #
+    # def get(self, request, pk, format=None):
+    #     event = self.get_object(pk)
+    #     serializer = BuskerSerializer(event)
+    #     return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         serializer_class = BuskerSerializer(data=request.data)
@@ -37,6 +51,12 @@ class Certification(generics.CreateAPIView):
             return Response(serializer_class.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        event = self.get_object(pk)
+        event.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class SignUp(generics.CreateAPIView):
     queryset = User.objects.all()

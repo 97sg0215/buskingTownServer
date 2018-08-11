@@ -23,6 +23,7 @@ from buskingTownServer import settings
 router = routers.DefaultRouter()
 router.register(r'user', views.UserList)
 router.register(r'userdetail', views.UserDetail)
+router.register(r'busker', views.BuskerList)
 
 urlpatterns = [
 
@@ -38,6 +39,7 @@ urlpatterns = [
     #로그인,회원가입 등의 사용자 관리 url
     url(r'^accounts/', include('accounts.urls')),
 
+    #버스커 활동 url
     url(r'^busking/', include('busking.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

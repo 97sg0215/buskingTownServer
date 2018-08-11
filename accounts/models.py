@@ -6,19 +6,19 @@ from django.dispatch import receiver
 from buskingTownServer import settings
 from rest_framework.authtoken.models import Token
 
-
+#장고 기본 제공 되는 user 모델과 1대1매핑 하여 확장
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, unique=False, on_delete=models.CASCADE)
-    user_birth = models.DateField(null=True, blank=True)
     user_phone = models.CharField(max_length=20, blank=True)
  #   user_image = ThumbnailImageField(upload_to='profile_image/%Y/%m')
 
-# post_save 시그널을 받아 토큰을 생성한다.
+# post_save 시그널을 받아 user 토큰을 생성한다.
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
+#버스커 모델도 user모델의 확장 user에서 제공하는 기본키를 사용하지 않고 busker_id로 기본키 관리
 class Busker(models.Model):
     user = models.OneToOneField(User, unique=False, on_delete=models.CASCADE)
     busker_id = models.AutoField(primary_key=True)
@@ -28,3 +28,5 @@ class Busker(models.Model):
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
     busker_image = ImageField(upload_to='busker_profile_image/', null=True, blank=True)
     certification = models.NullBooleanField(default=None,blank=True)
+    follower = models.IntegerField(null=True, blank=True)
+    coin = models.IntegerField(null=True, blank=True)

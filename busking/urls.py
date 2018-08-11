@@ -4,6 +4,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from busking import views
 
 urlpatterns = [
+    #버스커 랭킹 url
     url(r'^buskerRank/$', views.BuskerRank),
 ]
 

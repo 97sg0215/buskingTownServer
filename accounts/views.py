@@ -1,13 +1,7 @@
 # 클래스 기반의 Rest CRUD 처리
-from django.http import Http404, HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.http import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.generics import get_object_or_404
-from rest_framework.parsers import FormParser, FileUploadParser, JSONParser
-from rest_framework.utils import json
-from rest_framework.views import APIView
-
-from accounts import permissions
+from rest_framework.parsers import FormParser, MultiPartParser
 from accounts.serializers import *
 from rest_framework import viewsets, status
 from rest_framework.authtoken.models import Token
@@ -27,23 +21,29 @@ class UserDetail(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
-class Certification(generics.CreateAPIView):
+class BuskerList(viewsets.ModelViewSet):
     queryset = Busker.objects.all()
+    serializer_class = BuskerSerializer
+
+#이미지 전송을 위해 json형식이 아닌 formparser로 데이터 전송
+class BuskerView(generics.CreateAPIView):
     serializer_class = BuskerSerializer
     parser_classes = (FormParser,)
     parser_classes = (MultiPartParser, FormParser)
 
+    #busker_id로 버스커 객체 얻어옴
     def get_object(self, pk):
         try:
             return Busker.objects.get(pk=pk)
         except Busker.DoesNotExist:
             raise Http404
-    #
-    # def get(self, request, pk, format=None):
-    #     event = self.get_object(pk)
-    #     serializer = BuskerSerializer(event)
-    #     return Response(serializer.data)
 
+    def get(self, request, pk, format=None):
+        event = self.get_object(pk)
+        serializer = BuskerSerializer(event)
+        return Response(serializer.data)
+
+    #버스커 객체 생성
     def post(self, request, *args, **kwargs):
         serializer_class = BuskerSerializer(data=request.data)
         if serializer_class.is_valid():
@@ -52,12 +52,13 @@ class Certification(generics.CreateAPIView):
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    #버스커 객체 삭제
     def delete(self, request, pk, format=None):
         event = self.get_object(pk)
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+#회원가입 뷰 권한 처리를 위해 permission
 class SignUp(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
@@ -74,5 +75,5 @@ class CustomObtainAuthToken(ObtainAuthToken):
         user = serializer.validated_data['user']
 
         return Response({'token': token.key, 'id': token.user_id, 'username': user.username, 'email': user.email,
-                         'user_birth': user.profile.user_birth, 'user_phone': user.profile.user_phone
+                         'user_phone': user.profile.user_phone
                          })

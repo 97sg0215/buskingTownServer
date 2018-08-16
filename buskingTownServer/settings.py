@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'oauth2_provider',
+    'django_cron',
     # custom app
     'accounts',
     'busking',
@@ -64,6 +65,12 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     )
 }
+
+CRONJOBS = [
+    ('0 0 * * *', 'webapp.crontab_jobs.style.check_images'),
+    ('50 12-22 * * *', 'webapp.crontab_jobs.event.send_sms_jobs'),
+    ('15 12-22 * * 1-5', 'webapp.crontab_jobs.event.cancel_reserve_jobs'),
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -146,7 +153,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Media
-MEDIA_URL = '/media/'
+MEDIA_URL = '/accounts/certification/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240

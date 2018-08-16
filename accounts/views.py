@@ -27,9 +27,14 @@ class BuskerList(viewsets.ModelViewSet):
 
 #이미지 전송을 위해 json형식이 아닌 formparser로 데이터 전송
 class BuskerView(generics.CreateAPIView):
+    queryset = Busker.objects.all()
+    #ranking = Busker.objects.all.annotate(score=Sum(F('coin') * F('follower')))
+    #queryset.update(ranking['score__sum'])
     serializer_class = BuskerSerializer
     parser_classes = (FormParser,)
     parser_classes = (MultiPartParser, FormParser)
+    # def ranking:
+    #     Busker.objects.filter().aggregate(Sum())
 
     #busker_id로 버스커 객체 얻어옴
     def get_object(self, pk):

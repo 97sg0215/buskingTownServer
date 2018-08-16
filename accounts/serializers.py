@@ -10,10 +10,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     # ModelSerializer 를 이용해서 아래와 같이 짧은 코드로 직렬화 필드를 정의할 수 있다
     class Meta:
         model = Profile
-        fields = ('user', 'user_phone', 'following', 'follows_requesting_user')
-
-    following = serializers.SerializerMethodField()
-    follows_requesting_user = serializers.SerializerMethodField()
+        fields = ('user', 'user_phone')
 
     # 신규 프로필 instance를 생성해서 리턴해준다
     def create(self, validated_data):
@@ -26,25 +23,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def get_following(self, obj):
-        creator = self.context['request'].user
-        following = obj.user
-        connected = Connection.objects.filter(creator=creator, following=following)
-        return connected
-        #팔로워 숫자로 보려면 return len(connected)
-
-    def get_follows_requesting_user(self, obj):
-        creator = self.context['request'].user
-        following = obj.user
-        connected = Connection.objects.filter(creator=following, following=creator)
-        return connected
-
 #버스커 객체 직렬화
 class BuskerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Busker
-        fields = ('user', 'busker_id', 'busker_name', 'team_name',
-                  'busker_phone', 'busker_tag', 'busker_image', 'certification')
+        fields = ('user', 'busker_id', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin', 'follower')
 
 #프로필과 버스커 정보를 담는 user객체 직렬화
 class UserSerializer(serializers.ModelSerializer):
@@ -67,10 +50,7 @@ class UserSerializer(serializers.ModelSerializer):
         # create profile
         profile = Profile.objects.create(
             user=user,
-            user_phone=profile_data['user_phone'],
-            following=profile_data['following'],
-            follows_requesting_user=profile_data['follows_requesting_user'],
-            follow_link=profile_data['follow_link']
+            user_phone=profile_data['user_phone']
         )
 
         busker_data = validated_data.pop('busker')
@@ -83,18 +63,19 @@ class UserSerializer(serializers.ModelSerializer):
             busker_phone=busker_data['busker_phone'],
             busker_tag=busker_data['busker_tag'],
             busker_image=busker_data['busker_image'],
-            certification=busker_data['certification']
+            certification=busker_data['certification'],
+            coin=busker_data['coin'],
+            follower=busker_data['follower']
         )
 
         busker_rank_data = validated_data.pop('busker_rank')
         busker_rank = TopBusker.objects.create(
+            user=user,
             busker=busker_rank_data['busker'],
-            date=busker_rank_data['date']
+            busker_rank=busker_rank_data['busker_rank']
         )
 
         return user
-
-
 
 #회원가입 객체 직렬화
 class SignUpSerializer(serializers.ModelSerializer):

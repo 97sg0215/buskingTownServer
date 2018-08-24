@@ -14,6 +14,12 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'profile'
 
+# class ConnectionInline(admin.StackedInline):
+#     model = Connection
+#     can_delete = True
+#     fk_name = 'creator'
+#     verbose_name_plural = 'connection'
+
 class UserAdmin(BaseUserAdmin):
     inlines = (ProfileInline, BuskerInline)
 

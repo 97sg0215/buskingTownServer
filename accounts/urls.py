@@ -7,6 +7,8 @@ urlpatterns = [
     url(r'^login/$', views.CustomObtainAuthToken.as_view()),
     url(r'^sign_up/$', views.SignUp.as_view()),
 
+#    url(r'^followers/$', views.UserListAPIView.as_view()),
+
     #버스커 인증 url
     url(r'^certification/$', views.BuskerView.as_view()),
     #버스커 객체 삭제 url 인증 실패시 자동으로 실행되게 안드로이드에 설정

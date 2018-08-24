@@ -1,6 +1,7 @@
 # 클래스 기반의 Rest CRUD 처리
 from django.http import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.generics import ListAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
 from accounts.serializers import *
 from rest_framework import viewsets, status

@@ -1,3 +1,7 @@
+from django.core.serializers import serialize
+from django.core.serializers.json import DjangoJSONEncoder
+from rest_framework.serializers import ModelSerializer
+
 from accounts.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import User
@@ -20,14 +24,18 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.user = validated_data.get('user', instance.user)
         instance.user_phone = validated_data.get('user_phone', instance.user_phone)
+     #   instance.follows = validated_data.get('users', instance.users)
         instance.save()
         return instance
 
 #버스커 객체 직렬화
 class BuskerSerializer(serializers.ModelSerializer):
+
+    busker_image = serializers.ImageField(use_url=True)
+
     class Meta:
         model = Busker
-        fields = ('user', 'busker_id', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin', 'follower')
+        fields = ('user', 'busker_id', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin')
 
 #프로필과 버스커 정보를 담는 user객체 직렬화
 class UserSerializer(serializers.ModelSerializer):
@@ -50,7 +58,10 @@ class UserSerializer(serializers.ModelSerializer):
         # create profile
         profile = Profile.objects.create(
             user=user,
-            user_phone=profile_data['user_phone']
+            user_phone=profile_data['user_phone'],
+            following=profile_data['following'],
+            follows_requesting_user=profile_data['follows_requesting_user'],
+            follow_link=profile_data['follow_link']
         )
 
         busker_data = validated_data.pop('busker')
@@ -64,8 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
             busker_tag=busker_data['busker_tag'],
             busker_image=busker_data['busker_image'],
             certification=busker_data['certification'],
-            coin=busker_data['coin'],
-            follower=busker_data['follower']
+            coin=busker_data['coin']
         )
 
         busker_rank_data = validated_data.pop('busker_rank')
@@ -104,3 +114,27 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+#
+# class UserListSerializer(ModelSerializer):
+#
+#     following = serializers.SerializerMethodField()
+#     follows_requesting_user = serializers.SerializerMethodField()
+#
+#     class Meta:
+#         model = Profile
+#         fields = (
+#             'user',
+#             'following',
+#             'follows_requesting_user')
+#
+#     def get_following(self, obj):
+#         creator = self.context['request'].user
+#         following = obj.user
+#         connected = Connection.objects.filter(creator=creator, following=following)
+#         return len(connected)
+#
+#     def get_follows_requesting_user(self, obj):
+#         creator = self.context['request'].user
+#         following = obj.user
+#         connected = Connection.objects.filter(creator=following, following=creator)
+#         return len(connected)

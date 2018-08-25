@@ -35,15 +35,14 @@ class Busker(models.Model):
     certification = models.NullBooleanField(default=None, blank=True)
     coin = models.IntegerField(null=True, blank=True)
 
-    def get_followers(self):
-        followers = Connection.objects.filter(following=self.busker_id)
-        return followers
-
+    # def get_followers(self):
+    #     followers = Connection.objects.filter(following=self.busker_id)
+    #     return followers
 
 class Connection(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    user = models.ForeignKey(User, null=True, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
-    following = models.OneToOneField(Busker, related_name="friend_set", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
+    following = models.ForeignKey(Busker, unique=False, related_name="friend_set", on_delete=models.CASCADE)
 
 class ImageTest(models.Model):
     image_test = models.ImageField(upload_to='imagetest/', null=True, blank=True, default='media/default_image.jpeg')

@@ -22,7 +22,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     # follows_requesting_user = serializers.SerializerMethodField() ,followings = FollowerSerializer(many=True, read_only=True)
     # followings = serializers.SerializerMethodField()
 
-
     class Meta:
         model = Profile
         fields = ('user', 'user_phone')
@@ -51,14 +50,20 @@ class ProfileSerializer(serializers.ModelSerializer):
     #     connected = Connection.objects.filter(creator=following, following=creator)
     #     return connected
 
+
+class ConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Connection
+        fields = ('created', 'user', 'following')
+
+
 #버스커 객체 직렬화
 class BuskerSerializer(serializers.ModelSerializer):
-
     busker_image = serializers.ImageField(use_url=True)
-
     class Meta:
         model = Busker
         fields = ('user', 'busker_id', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin')
+
 
 #프로필과 버스커 정보를 담는 user객체 직렬화
 class UserSerializer(serializers.ModelSerializer):
@@ -135,10 +140,6 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-class ConnectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Connection
-        fields = ('created', 'user', 'following')
 
 class ImageTestSeriallzer(serializers.ModelSerializer):
     class Meta:

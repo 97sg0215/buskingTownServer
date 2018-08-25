@@ -9,9 +9,20 @@ from accounts.models import Profile
 from busking.models import TopBusker
 from busking.serializers import BuskerRankSerializer
 
+class FollowerSerializer(serializers.ModelSerializer):
+    creator = serializers.CharField(source='connection.creator')
+
+    class Meta:
+        model = Connection
+        fields = ('creator', )
+
 #사용자 프로필 객체 직렬화
 class ProfileSerializer(serializers.ModelSerializer):
     # ModelSerializer 를 이용해서 아래와 같이 짧은 코드로 직렬화 필드를 정의할 수 있다
+    # follows_requesting_user = serializers.SerializerMethodField() ,followings = FollowerSerializer(many=True, read_only=True)
+    # followings = serializers.SerializerMethodField()
+
+
     class Meta:
         model = Profile
         fields = ('user', 'user_phone')
@@ -24,9 +35,21 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.user = validated_data.get('user', instance.user)
         instance.user_phone = validated_data.get('user_phone', instance.user_phone)
-     #   instance.follows = validated_data.get('users', instance.users)
+        # instance.follows_requesting_user = validated_data.get('follows_requesting_user', instance.follows_requesting_user)
         instance.save()
         return instance
+
+    # def get_followings(self, obj):
+    #     creator = self.context['request'].user
+    #     following = obj.busker
+    #     connected = Connection.objects.filter(creator=creator, following=following)
+    #     return connected
+    #
+    # def get_follows_requesting_user(self, obj):
+    #     creator = self.context['request'].user
+    #     following = obj.user
+    #     connected = Connection.objects.filter(creator=following, following=creator)
+    #     return connected
 
 #버스커 객체 직렬화
 class BuskerSerializer(serializers.ModelSerializer):
@@ -58,10 +81,7 @@ class UserSerializer(serializers.ModelSerializer):
         # create profile
         profile = Profile.objects.create(
             user=user,
-            user_phone=profile_data['user_phone'],
-            following=profile_data['following'],
-            follows_requesting_user=profile_data['follows_requesting_user'],
-            follow_link=profile_data['follow_link']
+            user_phone=profile_data['user_phone']
         )
 
         busker_data = validated_data.pop('busker')
@@ -114,27 +134,14 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-#
-# class UserListSerializer(ModelSerializer):
-#
-#     following = serializers.SerializerMethodField()
-#     follows_requesting_user = serializers.SerializerMethodField()
-#
-#     class Meta:
-#         model = Profile
-#         fields = (
-#             'user',
-#             'following',
-#             'follows_requesting_user')
-#
-#     def get_following(self, obj):
-#         creator = self.context['request'].user
-#         following = obj.user
-#         connected = Connection.objects.filter(creator=creator, following=following)
-#         return len(connected)
-#
-#     def get_follows_requesting_user(self, obj):
-#         creator = self.context['request'].user
-#         following = obj.user
-#         connected = Connection.objects.filter(creator=following, following=creator)
-#         return len(connected)
+
+class ConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Connection
+        fields = ('created', 'user', 'following')
+
+class ImageTestSeriallzer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageTest
+        fields = ('image_test', )
+

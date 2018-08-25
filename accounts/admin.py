@@ -14,14 +14,20 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'profile'
 
-# class ConnectionInline(admin.StackedInline):
-#     model = Connection
-#     can_delete = True
-#     fk_name = 'creator'
-#     verbose_name_plural = 'connection'
+class ConnectionInline(admin.StackedInline):
+    model = Connection
+    can_delete = True
+    verbose_name_plural = 'connection'
+
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ('image_test',)
+
+
+
 
 class UserAdmin(BaseUserAdmin):
-    inlines = (ProfileInline, BuskerInline)
+    inlines = (ProfileInline, BuskerInline, ConnectionInline)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(ImageTest, ImageAdmin)

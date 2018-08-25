@@ -26,6 +26,46 @@ class BuskerList(viewsets.ModelViewSet):
     queryset = Busker.objects.all()
     serializer_class = BuskerSerializer
 
+class ImageView(generics.CreateAPIView):
+    queryset = ImageTest.objects.all()
+    serializer_class = ImageTestSeriallzer
+    parser_classes = (MultiPartParser, FormParser)
+
+class ConnectionList(viewsets.ModelViewSet):
+    queryset = Connection.objects.all()
+    serializer_class = ConnectionSerializer
+
+class Connection(generics.CreateAPIView):
+    queryset = Connection.objects.all()
+    serializer_class = ConnectionSerializer
+
+    def get_object(self, pk):
+        try:
+            return Connection.objects.get(pk=pk)
+        except Connection.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        event = self.get_object(pk)
+        serializer = ConnectionSerializer(event)
+        return Response(serializer.data)
+
+
+    def post(self, request, *args, **kwargs):
+        serializer_class = ConnectionSerializer(data=request.data)
+        if serializer_class.is_valid():
+            serializer_class.save()
+            return Response(serializer_class.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self, request, pk, format=None):
+        event = self.get_object(pk)
+        event.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 #이미지 전송을 위해 json형식이 아닌 formparser로 데이터 전송
 class BuskerView(generics.CreateAPIView):
     queryset = Busker.objects.all()

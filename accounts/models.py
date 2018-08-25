@@ -5,25 +5,15 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from buskingTownServer import settings
 from rest_framework.authtoken.models import Token
-#
-# class Connection(models.Model):
-#     created = models.DateTimeField(auto_now_add=True, editable=False)
-#     creator = models.ForeignKey(User, related_name="friendship_creator_set", on_delete=models.CASCADE)
-#     following = models.ForeignKey(User, related_name="friend_set", on_delete=models.CASCADE)
 
 #장고 기본 제공 되는 user 모델과 1대1매핑 하여 확장
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, unique=False, on_delete=models.CASCADE)
     user_phone = models.CharField(max_length=20, blank=True)
-    # users = models.ManyToManyField(Connection)
-    #
-    # def get_connections(self):
+
+    # def get_followings(self):
     #     connections = Connection.objects.filter(creator=self.user)
     #     return connections
-    #
-    # def get_followers(self):
-    #     followers = Connection.objects.filter(following=self.user)
-    #     return followers
 
  #   user_image = ThumbnailImageField(upload_to='profile_image/%Y/%m')
 
@@ -42,8 +32,23 @@ class Busker(models.Model):
     busker_tag = models.CharField(null=True, max_length=200, blank=True)
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
     busker_image = models.ImageField(upload_to='', null=True, blank=True, default='media/default_image.jpeg')
-    certification = models.NullBooleanField(default=None,blank=True)
+    certification = models.NullBooleanField(default=None, blank=True)
     coin = models.IntegerField(null=True, blank=True)
+
+    def get_followers(self):
+        followers = Connection.objects.filter(following=self.busker_id)
+        return followers
+
+
+class Connection(models.Model):
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    user = models.ForeignKey(User, null=True, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
+    following = models.OneToOneField(Busker, related_name="friend_set", on_delete=models.CASCADE)
+
+class ImageTest(models.Model):
+    image_test = models.ImageField(upload_to='imagetest/', null=True, blank=True, default='media/default_image.jpeg')
+
+
 
 
 

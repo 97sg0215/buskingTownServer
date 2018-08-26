@@ -1,13 +1,13 @@
 # 클래스 기반의 Rest CRUD 처리
 from django.http import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.generics import ListAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
 from accounts.serializers import *
 from rest_framework import viewsets, status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import generics
+from django.core.exceptions import ObjectDoesNotExist
 
 from accounts.permissions import IsAuthenticatedOrCreate
 from django.contrib.auth.models import User
@@ -32,17 +32,17 @@ class ImageView(generics.CreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
 
 class ConnectionList(viewsets.ModelViewSet):
-    queryset = Connection.objects.all()
+    queryset = Connections.objects.all()
     serializer_class = ConnectionSerializer
 
 class Connection(generics.CreateAPIView):
-    queryset = Connection.objects.all()
+    queryset = Connections.objects.all()
     serializer_class = ConnectionSerializer
 
     def get_object(self, pk):
         try:
-            return Connection.objects.get(pk=pk)
-        except Connection.DoesNotExist:
+            return Connections.objects.get(pk=pk)
+        except ObjectDoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):

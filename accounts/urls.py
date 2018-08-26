@@ -10,6 +10,7 @@ urlpatterns = [
     #팔로잉
     url(r'^following/$', views.Connection.as_view()),
     #팔로잉 삭제
+    url(r'^unfollowing/(?P<pk>\d+)/$', views.Connection.as_view()),
 
 
     #버스커 인증 url

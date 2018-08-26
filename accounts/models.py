@@ -39,8 +39,8 @@ class Busker(models.Model):
     #     followers = Connection.objects.filter(following=self.busker_id)
     #     return followers
 
-class Connection(models.Model):
-    created = models.DateTimeField(auto_now_add=True, editable=False)
+class Connections(models.Model):
+    connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
     following = models.ForeignKey(Busker, unique=False, related_name="friend_set", on_delete=models.CASCADE)
 

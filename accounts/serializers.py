@@ -9,12 +9,12 @@ from accounts.models import Profile
 from busking.models import TopBusker
 from busking.serializers import BuskerRankSerializer
 
-class FollowerSerializer(serializers.ModelSerializer):
-    creator = serializers.CharField(source='connection.creator')
-
-    class Meta:
-        model = Connection
-        fields = ('creator', )
+# class FollowerSerializer(serializers.ModelSerializer):
+#     creator = serializers.CharField(source='connection.creator')
+#
+#     class Meta:
+#         model = Connections
+#         fields = ('creator', )
 
 #사용자 프로필 객체 직렬화
 class ProfileSerializer(serializers.ModelSerializer):
@@ -53,8 +53,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class ConnectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Connection
-        fields = ('created', 'user', 'following')
+        model = Connections
+        fields = ('connection_id', 'user', 'following')
 
 
 #버스커 객체 직렬화

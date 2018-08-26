@@ -15,7 +15,7 @@ class ProfileInline(admin.StackedInline):
     verbose_name_plural = 'profile'
 
 class ConnectionInline(admin.StackedInline):
-    model = Connection
+    model = Connections
     can_delete = True
     verbose_name_plural = 'connection'
 

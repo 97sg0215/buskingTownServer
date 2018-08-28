@@ -19,15 +19,9 @@ class ConnectionInline(admin.StackedInline):
     can_delete = True
     verbose_name_plural = 'connection'
 
-class ImageAdmin(admin.ModelAdmin):
-    list_display = ('image_test',)
-
-
-
 
 class UserAdmin(BaseUserAdmin):
     inlines = (ProfileInline, BuskerInline, ConnectionInline)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(ImageTest, ImageAdmin)

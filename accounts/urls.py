@@ -7,10 +7,13 @@ urlpatterns = [
     url(r'^login/$', views.CustomObtainAuthToken.as_view()),
     url(r'^sign_up/$', views.SignUp.as_view()),
 
+    #회원 이미지 업로드
+    url(r'update_profile/(?P<pk>\d+)/$', views.UserDetailEdit.as_view()),
+
     #팔로잉
-    url(r'^following/$', views.Connection.as_view()),
+    url(r'^following/$', views.ConnectionsView.as_view()),
     #팔로잉 삭제
-    url(r'^unfollowing/(?P<pk>\d+)/$', views.Connection.as_view()),
+    url(r'^unfollowing/(?P<pk>\d+)/$', views.ConnectionsView.as_view()),
 
 
     #버스커 인증 url
@@ -19,9 +22,6 @@ urlpatterns = [
     url(r'^delete/(?P<pk>\d+)/$', views.BuskerView.as_view()),
     #버스커확인 url
     url(r'^buskerDetail/(?P<pk>\d+)/$', views.BuskerView.as_view()),
-
-    #테스트
-    url(r'imageTest/$', views.ImageView.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

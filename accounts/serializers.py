@@ -9,22 +9,12 @@ from accounts.models import Profile
 from busking.models import TopBusker
 from busking.serializers import BuskerRankSerializer
 
-# class FollowerSerializer(serializers.ModelSerializer):
-#     creator = serializers.CharField(source='connection.creator')
-#
-#     class Meta:
-#         model = Connections
-#         fields = ('creator', )
-
 #사용자 프로필 객체 직렬화
 class ProfileSerializer(serializers.ModelSerializer):
     # ModelSerializer 를 이용해서 아래와 같이 짧은 코드로 직렬화 필드를 정의할 수 있다
-    # follows_requesting_user = serializers.SerializerMethodField() ,followings = FollowerSerializer(many=True, read_only=True)
-    # followings = serializers.SerializerMethodField()
-
     class Meta:
         model = Profile
-        fields = ('user', 'user_phone')
+        fields = ('user', 'user_phone', 'user_image')
 
     # 신규 프로필 instance를 생성해서 리턴해준다
     def create(self, validated_data):
@@ -34,7 +24,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.user = validated_data.get('user', instance.user)
         instance.user_phone = validated_data.get('user_phone', instance.user_phone)
-        # instance.follows_requesting_user = validated_data.get('follows_requesting_user', instance.follows_requesting_user)
+        instance.user_image = validated_data.get('user_image', instance.user_image)
         instance.save()
         return instance
 
@@ -51,7 +41,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     #     return connected
 
 
-class ConnectionSerializer(serializers.ModelSerializer):
+class ConnectionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Connections
         fields = ('connection_id', 'user', 'following')
@@ -59,7 +49,6 @@ class ConnectionSerializer(serializers.ModelSerializer):
 
 #버스커 객체 직렬화
 class BuskerSerializer(serializers.ModelSerializer):
-    busker_image = serializers.ImageField(use_url=True)
     class Meta:
         model = Busker
         fields = ('user', 'busker_id', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin')
@@ -86,7 +75,8 @@ class UserSerializer(serializers.ModelSerializer):
         # create profile
         profile = Profile.objects.create(
             user=user,
-            user_phone=profile_data['user_phone']
+            user_phone=profile_data['user_phone'],
+            user_image=profile_data['user_image']
         )
 
         busker_data = validated_data.pop('busker')
@@ -140,9 +130,4 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-
-class ImageTestSeriallzer(serializers.ModelSerializer):
-    class Meta:
-        model = ImageTest
-        fields = ('image_test', )
 

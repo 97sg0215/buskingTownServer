@@ -22,22 +22,32 @@ class UserDetail(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
+class UserDetailEdit(generics.UpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    parser_classes = (MultiPartParser,)
+    permission_classes = (IsAuthenticatedOrCreate,)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+
 class BuskerList(viewsets.ModelViewSet):
     queryset = Busker.objects.all()
     serializer_class = BuskerSerializer
 
-class ImageView(generics.CreateAPIView):
-    queryset = ImageTest.objects.all()
-    serializer_class = ImageTestSeriallzer
-    parser_classes = (MultiPartParser, FormParser)
-
 class ConnectionList(viewsets.ModelViewSet):
     queryset = Connections.objects.all()
-    serializer_class = ConnectionSerializer
+    serializer_class = ConnectionsSerializer
 
-class Connection(generics.CreateAPIView):
+class ConnectionsView(generics.CreateAPIView):
     queryset = Connections.objects.all()
-    serializer_class = ConnectionSerializer
+    serializer_class = ConnectionsSerializer
 
     def get_object(self, pk):
         try:
@@ -47,18 +57,16 @@ class Connection(generics.CreateAPIView):
 
     def get(self, request, pk, format=None):
         event = self.get_object(pk)
-        serializer = ConnectionSerializer(event)
+        serializer = ConnectionsSerializer(event)
         return Response(serializer.data)
 
-
     def post(self, request, *args, **kwargs):
-        serializer_class = ConnectionSerializer(data=request.data)
+        serializer_class = ConnectionsSerializer(data=request.data)
         if serializer_class.is_valid():
             serializer_class.save()
             return Response(serializer_class.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def delete(self, request, pk, format=None):
         event = self.get_object(pk)
@@ -69,13 +77,8 @@ class Connection(generics.CreateAPIView):
 #이미지 전송을 위해 json형식이 아닌 formparser로 데이터 전송
 class BuskerView(generics.CreateAPIView):
     queryset = Busker.objects.all()
-    #ranking = Busker.objects.all.annotate(score=Sum(F('coin') * F('follower')))
-    #queryset.update(ranking['score__sum'])
     serializer_class = BuskerSerializer
-    parser_classes = (FormParser,)
-    parser_classes = (MultiPartParser, FormParser)
-    # def ranking:
-    #     Busker.objects.filter().aggregate(Sum())
+    parser_classes = (MultiPartParser,)
 
     #busker_id로 버스커 객체 얻어옴
     def get_object(self, pk):

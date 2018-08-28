@@ -10,12 +10,11 @@ from rest_framework.authtoken.models import Token
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, unique=False, on_delete=models.CASCADE)
     user_phone = models.CharField(max_length=20, blank=True)
+    user_image = models.ImageField(upload_to='user_profile_image/', null=True, blank=True)
 
     # def get_followings(self):
     #     connections = Connection.objects.filter(creator=self.user)
     #     return connections
-
- #   user_image = ThumbnailImageField(upload_to='profile_image/%Y/%m')
 
 # post_save 시그널을 받아 user 토큰을 생성한다.
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -31,7 +30,7 @@ class Busker(models.Model):
     team_name = models.CharField(null=True, max_length=50, blank=True)
     busker_tag = models.CharField(null=True, max_length=200, blank=True)
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
-    busker_image = models.ImageField(upload_to='', null=True, blank=True, default='media/default_image.jpeg')
+    busker_image = models.ImageField(upload_to='', null=True, blank=True)
     certification = models.NullBooleanField(default=None, blank=True)
     coin = models.IntegerField(null=True, blank=True)
 
@@ -43,10 +42,6 @@ class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
     following = models.ForeignKey(Busker, unique=False, related_name="friend_set", on_delete=models.CASCADE)
-
-class ImageTest(models.Model):
-    image_test = models.ImageField(upload_to='imagetest/', null=True, blank=True, default='media/default_image.jpeg')
-
 
 
 

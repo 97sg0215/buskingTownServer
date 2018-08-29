@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 class Profile(models.Model):
     user = models.OneToOneField(User, primary_key=True, unique=False, on_delete=models.CASCADE, blank=True)
     user_phone = models.CharField(max_length=20, blank=True)
-    user_image = models.ImageField(upload_to='user_profile_image/', null=True, blank=True)
+    user_image = models.ImageField(upload_to='user_profile/', null=True, blank=True)
 
     # def get_followings(self):
     #     connections = Connection.objects.filter(creator=self.user)
@@ -30,7 +30,7 @@ class Busker(models.Model):
     team_name = models.CharField(null=True, max_length=50, blank=True)
     busker_tag = models.CharField(null=True, max_length=200, blank=True)
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
-    busker_image = models.ImageField(upload_to='busker_profile_image/', null=True, blank=True)
+    busker_image = models.ImageField(upload_to='certification/', null=True, blank=True)
     certification = models.NullBooleanField(default=None, blank=True)
     coin = models.IntegerField(null=True, blank=True)
 

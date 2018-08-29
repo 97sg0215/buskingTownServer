@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from accounts import views
+from django.conf.urls.static import static
+from buskingTownServer import settings
 
 urlpatterns = [
     #로그인 및 회원가입 url
@@ -15,13 +17,13 @@ urlpatterns = [
     #팔로잉 삭제
     url(r'^unfollowing/(?P<pk>\d+)/$', views.ConnectionsView.as_view()),
 
-
     #버스커 인증 url
     url(r'^certification/$', views.BuskerView.as_view()),
     #버스커 객체 삭제 url 인증 실패시 자동으로 실행되게 안드로이드에 설정
     url(r'^delete/(?P<pk>\d+)/$', views.BuskerView.as_view()),
     #버스커확인 url
     url(r'^buskerDetail/(?P<pk>\d+)/$', views.BuskerView.as_view()),
-]
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)

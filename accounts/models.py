@@ -8,7 +8,7 @@ from rest_framework.authtoken.models import Token
 
 #장고 기본 제공 되는 user 모델과 1대1매핑 하여 확장
 class Profile(models.Model):
-    user = models.OneToOneField(User, primary_key=True, unique=False, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, primary_key=True, unique=False, on_delete=models.CASCADE, blank=True)
     user_phone = models.CharField(max_length=20, blank=True)
     user_image = models.ImageField(upload_to='user_profile_image/', null=True, blank=True)
 

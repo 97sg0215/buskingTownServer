@@ -153,7 +153,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Media
-MEDIA_URL = '/accounts/certification/'
+ACCOUNT_MEDIA_URL = '/accounts/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240

@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^sign_up/$', views.SignUp.as_view()),
 
     #회원 이미지 업로드
-    url(r'update_profile/(?P<pk>\d+)/$', views.UserDetailEdit.as_view()),
+    url(r'^update_profile/(?P<pk>\d+)/$', views.UserDetailEdit.as_view()),
 
     #팔로잉
     url(r'^following/$', views.ConnectionsView.as_view()),

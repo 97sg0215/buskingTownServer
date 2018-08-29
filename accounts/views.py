@@ -28,13 +28,28 @@ class UserDetailEdit(generics.UpdateAPIView):
     parser_classes = (MultiPartParser,)
     permission_classes = (IsAuthenticatedOrCreate,)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            raise Http404
+
+    # def update(self, request, pk=, *args, **kwargs):
+    #     partial = kwargs.pop('partial', False)
+    #     instance = self.get_object(pk=pk)
+    # #    instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
+    #     return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        Profile = self.get_object(pk)
+        serializer = ProfileSerializer(Profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BuskerList(viewsets.ModelViewSet):

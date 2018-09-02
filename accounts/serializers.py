@@ -51,7 +51,7 @@ class ConnectionsSerializer(serializers.ModelSerializer):
 class BuskerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Busker
-        fields = ('user', 'busker_id', 'busker_name', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin')
+        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin')
 
 
 #프로필과 버스커 정보를 담는 user객체 직렬화
@@ -61,11 +61,12 @@ class UserSerializer(serializers.ModelSerializer):
     busker_rank = BuskerRankSerializer(required=True, write_only=True)
     class Meta:
         model = User
-        fields = ('url', 'email', 'username', 'profile', 'busker', 'busker_rank')
+        fields = ('id', 'url', 'email', 'username', 'profile', 'busker', 'busker_rank')
 
     def create(self, validated_data):
         # create user
         user = User.objects.create(
+            id=validated_data['id'],
             url=validated_data['url'],
             email=validated_data['email'],
             username=validated_data['username']
@@ -84,6 +85,7 @@ class UserSerializer(serializers.ModelSerializer):
         busker = Busker.objects.create(
             user=user,
             busker_id=busker_data['busker_id'],
+            busker_type=busker_data['busker_type'],
             busker_name=busker_data['busker_name'],
             team_name=busker_data['team_name'],
             busker_phone=busker_data['busker_phone'],

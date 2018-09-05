@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from busking.models import TopBusker
+from busking.models import Post
 
 #버스커 랭킹 객체 직렬화
 class BuskerRankSerializer(serializers.ModelSerializer):
@@ -19,3 +20,9 @@ class BuskerRankSerializer(serializers.ModelSerializer):
         instance.coin = validated_data.get('data', instance.data)
         instance.save()
         return instance
+
+#게시물 작성 객체 직렬화
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('post_id', 'busker', 'image', 'content', 'created_at')

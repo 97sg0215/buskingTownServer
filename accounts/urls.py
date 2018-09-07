@@ -12,6 +12,12 @@ urlpatterns = [
     #회원 이미지 업로드
     url(r'^update_profile/(?P<pk>\d+)/$', views.UserDetailEdit.as_view()),
 
+    #팔로우 전체 목록
+    url(r'^allFollowList/$', views.ConnectionList.as_view({'get': 'list'})),
+    #각 버스커 별 팔로워 목록
+    url(r'^followerList/(?P<pk>\d+)/$', views.FollowerList.as_view()),
+    #각 유저 별 팔로잉 목록
+    url(r'^followingList/(?P<pk>\d+)/$', views.FollowingList.as_view()),
     #팔로잉
     url(r'^following/$', views.ConnectionsView.as_view()),
     #팔로잉 삭제
@@ -23,6 +29,8 @@ urlpatterns = [
     url(r'^delete/(?P<pk>\d+)/$', views.BuskerView.as_view()),
     #버스커확인 url
     url(r'^buskerDetail/(?P<pk>\d+)/$', views.BuskerView.as_view()),
+    #버스커 갱신
+    url(r'^buskerRankCount/(?P<pk>\d+)/$', views.BuskerView.as_view()),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

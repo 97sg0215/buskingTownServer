@@ -2,12 +2,15 @@
 from django.http import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.views import APIView
+
 from accounts.serializers import *
 from rest_framework import viewsets, status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import generics
 from django.core.exceptions import ObjectDoesNotExist
+from pusher_push_notifications import PushNotifications
 
 from accounts.permissions import IsAuthenticatedOrCreate
 from django.contrib.auth.models import User
@@ -33,15 +36,6 @@ class UserDetailEdit(generics.UpdateAPIView):
             return Profile.objects.get(pk=pk)
         except ObjectDoesNotExist:
             raise Http404
-
-    # def update(self, request, pk=, *args, **kwargs):
-    #     partial = kwargs.pop('partial', False)
-    #     instance = self.get_object(pk=pk)
-    # #    instance = self.get_object()
-    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #     return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         Profile = self.get_object(pk)
@@ -79,6 +73,7 @@ class ConnectionsView(generics.CreateAPIView):
         serializer_class = ConnectionsSerializer(data=request.data)
         if serializer_class.is_valid():
             serializer_class.save()
+            push_notify(Connections.following)
             return Response(serializer_class.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -89,11 +84,38 @@ class ConnectionsView(generics.CreateAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class FollowerList(APIView):
+    def get_object(self, pk):
+        try:
+            return Busker.objects.get(pk=pk)
+        except Busker.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        followers = event.get_followers()
+        serializer = ConnectionsSerializer(followers, many=True)
+        return Response(serializer.data)
+
+class FollowingList(APIView):
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        followings = event.get_followings()
+        serializer = ConnectionsSerializer(followings, many=True)
+        return Response(serializer.data)
+
 #이미지 전송을 위해 json형식이 아닌 formparser로 데이터 전송
 class BuskerView(generics.CreateAPIView):
     queryset = Busker.objects.all()
     serializer_class = BuskerSerializer
     parser_classes = (MultiPartParser,)
+
 
     #busker_id로 버스커 객체 얻어옴
     def get_object(self, pk):
@@ -115,6 +137,15 @@ class BuskerView(generics.CreateAPIView):
             return Response(serializer_class.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    #코인,좋아요,팔로우 수를 갱신
+    def put(self, request, pk, format=None):
+        Busker = self.get_object(pk)
+        serializer = BuskerSerializer(Busker, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #버스커 객체 삭제
     def delete(self, request, pk, format=None):
@@ -141,3 +172,17 @@ class CustomObtainAuthToken(ObtainAuthToken):
         return Response({'token': token.key, 'id': token.user_id, 'username': user.username, 'email': user.email,
                          'user_phone': user.profile.user_phone
                          })
+
+def push_notify(data):
+    pn_client = PushNotifications(
+        instance_id='3634159e-f404-4859-9fa0-44d749815dbc',
+        secret_key='6CE13D769A4C3DAAE549170B1EE891D',
+    )
+
+    response = pn_client.publish(
+        interests=['hello'],
+        publish_body={'apns': {'aps': {'alert': 'follow'}},
+                      'fcm': {'notification': {'title': 'test', 'body': str(data)}}}
+    )
+
+    print(response['publishId'])

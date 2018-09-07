@@ -28,19 +28,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    # def get_followings(self, obj):
-    #     creator = self.context['request'].user
-    #     following = obj.busker
-    #     connected = Connection.objects.filter(creator=creator, following=following)
-    #     return connected
-    #
-    # def get_follows_requesting_user(self, obj):
-    #     creator = self.context['request'].user
-    #     following = obj.user
-    #     connected = Connection.objects.filter(creator=following, following=creator)
-    #     return connected
-
-
 class ConnectionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Connections
@@ -51,7 +38,8 @@ class ConnectionsSerializer(serializers.ModelSerializer):
 class BuskerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Busker
-        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'coin')
+        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification',
+                  'like_counts', 'follower_counts', 'coin')
 
 
 #프로필과 버스커 정보를 담는 user객체 직렬화
@@ -92,6 +80,9 @@ class UserSerializer(serializers.ModelSerializer):
             busker_tag=busker_data['busker_tag'],
             busker_image=busker_data['busker_image'],
             certification=busker_data['certification'],
+
+            like_counts=busker_data['like_counts'],
+            follower_counts=busker_data['follower_counts'],
             coin=busker_data['coin']
         )
 

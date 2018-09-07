@@ -12,9 +12,9 @@ class Profile(models.Model):
     user_phone = models.CharField(max_length=20, blank=True)
     user_image = models.ImageField(upload_to='user_profile/', null=True, blank=True)
 
-    # def get_followings(self):
-    #     connections = Connection.objects.filter(creator=self.user)
-    #     return connections
+    def get_followings(self):
+        followings = Connections.objects.filter(user=self.user)
+        return followings
 
 # post_save 시그널을 받아 user 토큰을 생성한다.
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -33,11 +33,13 @@ class Busker(models.Model):
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
     busker_image = models.ImageField(upload_to='certification/', null=True, blank=True)
     certification = models.NullBooleanField(default=None, blank=True)
+    like_counts = models.IntegerField(null=True, blank=True)
+    follower_counts = models.IntegerField(null=True, blank=True)
     coin = models.IntegerField(null=True, blank=True)
 
-    # def get_followers(self):
-    #     followers = Connection.objects.filter(following=self.busker_id)
-    #     return followers
+    def get_followers(self):
+        followers = Connections.objects.filter(following=self.busker_id)
+        return followers
 
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)

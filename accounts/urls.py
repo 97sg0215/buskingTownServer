@@ -29,8 +29,9 @@ urlpatterns = [
     url(r'^delete/(?P<pk>\d+)/$', views.BuskerView.as_view()),
     #버스커확인 url
     url(r'^buskerDetail/(?P<pk>\d+)/$', views.BuskerView.as_view()),
-    #버스커 갱신
-    url(r'^buskerRankCount/(?P<pk>\d+)/$', views.BuskerView.as_view()),
+
+    #버스커 랭킹 점수
+    url(r'^buskerRankCount/$', views.ScoreListView.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

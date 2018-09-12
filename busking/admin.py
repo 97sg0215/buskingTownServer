@@ -5,7 +5,7 @@ from busking.models import TopBusker, Post
 
 
 class RankAdmin(admin.ModelAdmin):
-    list_display = ('data', 'busker')
+    list_display = ('busker',)
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('post_id', 'busker', 'image', 'content', 'created_at')

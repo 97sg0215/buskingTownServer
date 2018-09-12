@@ -5,7 +5,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.views import APIView
 
 from accounts.serializers import *
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework import generics
@@ -14,6 +14,8 @@ from pusher_push_notifications import PushNotifications
 
 from accounts.permissions import IsAuthenticatedOrCreate
 from django.contrib.auth.models import User
+
+from django.db.models import Sum,F
 
 # generics 에 목록과 생성 API 가 정의되어 있다
 class UserList(viewsets.ModelViewSet):
@@ -83,6 +85,9 @@ class ConnectionsView(generics.CreateAPIView):
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class ScoreListView(generics.ListAPIView):
+    queryset = Busker.objects.all()
+    serializer_class = ScoreSerializer
 
 class FollowerList(APIView):
     def get_object(self, pk):
@@ -91,7 +96,7 @@ class FollowerList(APIView):
         except Busker.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk,format=None):
+    def get(self, request, pk, format=None):
         event = self.get_object(pk)
         followers = event.get_followers()
         serializer = ConnectionsSerializer(followers, many=True)
@@ -115,7 +120,6 @@ class BuskerView(generics.CreateAPIView):
     queryset = Busker.objects.all()
     serializer_class = BuskerSerializer
     parser_classes = (MultiPartParser,)
-
 
     #busker_id로 버스커 객체 얻어옴
     def get_object(self, pk):

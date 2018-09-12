@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from buskingTownServer import settings
 from rest_framework.authtoken.models import Token
+from django.db.models import F, Sum, Count, Case, When, Value
 
 #장고 기본 제공 되는 user 모델과 1대1매핑 하여 확장
 class Profile(models.Model):
@@ -33,20 +34,21 @@ class Busker(models.Model):
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
     busker_image = models.ImageField(upload_to='certification/', null=True, blank=True)
     certification = models.NullBooleanField(default=None, blank=True)
-    like_counts = models.IntegerField(null=True, blank=True)
-    follower_counts = models.IntegerField(null=True, blank=True)
-    coin = models.IntegerField(null=True, blank=True)
+    received_coin = models.IntegerField(blank=True, default=0)
 
     def get_followers(self):
         followers = Connections.objects.filter(following=self.busker_id)
         return followers
 
+    def get_score(self, obj):
+        coin_amount = obj.received_coin
+        follower_cnt = obj.get_followers()
+        score = coin_amount + len(follower_cnt)
+        return score
+
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
     following = models.ForeignKey(Busker, unique=False, related_name="friend_set", on_delete=models.CASCADE)
-
-
-
 
 

@@ -1,13 +1,17 @@
 from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
+from django.http import Http404
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
 from accounts.models import *
-from rest_framework import serializers
+from rest_framework import serializers, filters
 from django.contrib.auth.models import User
 from accounts.models import Profile
 from busking.models import TopBusker
 from busking.serializers import BuskerRankSerializer
+from django.db.models import Sum,F
+
 
 #사용자 프로필 객체 직렬화
 class ProfileSerializer(serializers.ModelSerializer):
@@ -33,13 +37,45 @@ class ConnectionsSerializer(serializers.ModelSerializer):
         model = Connections
         fields = ('connection_id', 'user', 'following')
 
+class ScoreSerializer(serializers.ModelSerializer):
+    follower_count = serializers.SerializerMethodField()
+    score = serializers.SerializerMethodField()
+
+    def get_follower_count(self, obj):
+        following = obj.busker_id
+        connected = Connections.objects.filter(following=following)
+        return len(connected)
+
+    def get_score(self, obj):
+        coin_amount = obj.received_coin
+        follower_cnt = obj.get_followers()
+        score = coin_amount + len(follower_cnt)
+        return score
+
+    class Meta:
+        model = Busker
+        fields = ('busker_id', 'received_coin', 'follower_count', 'score')
+
 
 #버스커 객체 직렬화
 class BuskerSerializer(serializers.ModelSerializer):
+    follower_count = serializers.SerializerMethodField()
+    score = serializers.SerializerMethodField()
+
+    def get_follower_count(self, obj):
+        following = obj.busker_id
+        connected = Connections.objects.filter(following=following)
+        return len(connected)
+
+    def get_score(self, obj):
+        coin_amount = obj.received_coin
+        follower_cnt = obj.get_followers()
+        score = coin_amount + len(follower_cnt)
+        return score
+
     class Meta:
         model = Busker
-        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification',
-                  'like_counts', 'follower_counts', 'coin')
+        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'received_coin', 'follower_count', 'score')
 
 
 #프로필과 버스커 정보를 담는 user객체 직렬화
@@ -80,10 +116,8 @@ class UserSerializer(serializers.ModelSerializer):
             busker_tag=busker_data['busker_tag'],
             busker_image=busker_data['busker_image'],
             certification=busker_data['certification'],
-
-            like_counts=busker_data['like_counts'],
-            follower_counts=busker_data['follower_counts'],
-            coin=busker_data['coin']
+            received_coin=busker_data['received_coin'],
+            score=busker_data['score']
         )
 
         busker_rank_data = validated_data.pop('busker_rank')

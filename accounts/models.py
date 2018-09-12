@@ -36,13 +36,14 @@ class Busker(models.Model):
     certification = models.NullBooleanField(default=None, blank=True)
     received_coin = models.IntegerField(blank=True, default=0)
 
+
     def get_followers(self):
         followers = Connections.objects.filter(following=self.busker_id)
         return followers
 
-    def get_score(self, obj):
-        coin_amount = obj.received_coin
-        follower_cnt = obj.get_followers()
+    def get_score(self):
+        coin_amount = self.received_coin
+        follower_cnt = self.get_followers()
         score = coin_amount + len(follower_cnt)
         return score
 

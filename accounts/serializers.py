@@ -54,28 +54,15 @@ class ScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Busker
-        fields = ('busker_id', 'received_coin', 'follower_count', 'score')
+        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'received_coin', 'follower_count', 'score')
 
 
 #버스커 객체 직렬화
 class BuskerSerializer(serializers.ModelSerializer):
-    follower_count = serializers.SerializerMethodField()
-    score = serializers.SerializerMethodField()
-
-    def get_follower_count(self, obj):
-        following = obj.busker_id
-        connected = Connections.objects.filter(following=following)
-        return len(connected)
-
-    def get_score(self, obj):
-        coin_amount = obj.received_coin
-        follower_cnt = obj.get_followers()
-        score = coin_amount + len(follower_cnt)
-        return score
 
     class Meta:
         model = Busker
-        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'received_coin', 'follower_count', 'score')
+        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'received_coin')
 
 
 #프로필과 버스커 정보를 담는 user객체 직렬화

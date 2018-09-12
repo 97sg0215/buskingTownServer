@@ -1,4 +1,6 @@
 # 클래스 기반의 Rest CRUD 처리
+import operator
+
 from django.http import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -86,7 +88,7 @@ class ConnectionsView(generics.CreateAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ScoreListView(generics.ListAPIView):
-    queryset = Busker.objects.all()
+    queryset = Busker.objects.prefetch_related('friend_set').annotate(score=models.F('received_coin') + models.Count('friend_set__following_id')).order_by('-score')
     serializer_class = ScoreSerializer
 
 class FollowerList(APIView):

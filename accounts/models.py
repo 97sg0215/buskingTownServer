@@ -32,7 +32,7 @@ class Busker(models.Model):
     team_name = models.CharField(null=True, max_length=50, blank=True)
     busker_tag = models.CharField(null=True, max_length=200, blank=True)
     busker_phone = models.CharField(null=True, max_length=20, blank=True)
-    busker_image = models.ImageField(upload_to='certification/', null=True, blank=True)
+    busker_image = models.ImageField(upload_to='accounts/certification/', null=True, blank=True)
     certification = models.NullBooleanField(default=None, blank=True)
     received_coin = models.IntegerField(blank=True, default=0)
 

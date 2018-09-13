@@ -24,4 +24,4 @@ class BuskerRankSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('post_id', 'busker', 'image', 'content', 'created_at')
+        fields = ('post_id', 'busker', 'post_image', 'content', 'created_at')

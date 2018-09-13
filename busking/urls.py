@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
-
+from django.conf.urls.static import static
+from buskingTownServer import settings
 from busking import views
 
 urlpatterns = [
@@ -19,6 +20,6 @@ urlpatterns = [
     url(r'postUpdate/(?P<pk>\d+)/$', views.PostView.as_view())
 
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)

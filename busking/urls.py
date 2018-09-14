@@ -15,7 +15,7 @@ urlpatterns = [
     #게시물 상세 url
     url(r'^postDetail/(?P<pk>\d+)/$', views.PostView.as_view()),
     #게시물 리스트 url
-    url(r'^postList/', views.PostList.as_view({'get': 'list'})),
+    url(r'^postList/$', views.PostList.as_view({'get': 'list'})),
     #게시물 수정 url
     url(r'postUpdate/(?P<pk>\d+)/$', views.PostView.as_view())
 

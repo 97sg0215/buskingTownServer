@@ -43,4 +43,7 @@ urlpatterns = [
     #버스커 활동 url
     url(r'^busking/', include('busking.urls')),
 
+    #장소제공 url
+    url(r'rentLocation/', include('rentLocation.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # custom app
     'accounts',
     'busking',
+    'rentLocation',
 ]
 
 AUTH_PROFILE_MODULE = 'accounts.Profile'

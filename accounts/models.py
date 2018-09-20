@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import ImageField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 from buskingTownServer import settings
 from rest_framework.authtoken.models import Token
 from django.db.models import F, Sum, Count, Case, When, Value
@@ -36,7 +37,6 @@ class Busker(models.Model):
     certification = models.NullBooleanField(default=None, blank=True)
     received_coin = models.IntegerField(blank=True, default=0)
 
-
     def get_followers(self):
         followers = Connections.objects.filter(following=self.busker_id)
         return followers
@@ -46,6 +46,11 @@ class Busker(models.Model):
         follower_cnt = self.get_followers()
         score = coin_amount + len(follower_cnt)
         return score
+
+    def get_posts(self):
+        from busking.models import Post
+        posts = Post.objects.filter(busker=self.busker_id)
+        return posts
 
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)

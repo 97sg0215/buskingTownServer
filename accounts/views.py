@@ -88,7 +88,7 @@ class ConnectionsView(generics.CreateAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ScoreListView(generics.ListAPIView):
-    queryset = Busker.objects.prefetch_related('friend_set').annotate(score=models.F('received_coin') + models.Count('friend_set__following_id')).order_by('-score')
+    queryset = Busker.objects.filter(busker_type=1).prefetch_related('friend_set').annotate(score=models.F('received_coin') + models.Count('friend_set__following_id')).order_by('-score')
     serializer_class = ScoreSerializer
 
 class FollowerList(APIView):
@@ -144,7 +144,6 @@ class BuskerView(generics.CreateAPIView):
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    #코인,좋아요,팔로우 수를 갱신
     def put(self, request, pk, format=None):
         Busker = self.get_object(pk)
         serializer = BuskerSerializer(Busker, data=request.data)
@@ -181,8 +180,8 @@ class CustomObtainAuthToken(ObtainAuthToken):
 
 def push_notify(data):
     pn_client = PushNotifications(
-        instance_id='3634159e-f404-4859-9fa0-44d749815dbc',
-        secret_key='6CE13D769A4C3DAAE549170B1EE891D',
+        instance_id='4c4a8894-87b8-4006-8e7e-b2b57fa83b79',
+        secret_key='3A16D47264DFF2A3D50223DA373AB12A0D70924121B9CF6E98FEDB723F16C91B',
     )
 
     response = pn_client.publish(

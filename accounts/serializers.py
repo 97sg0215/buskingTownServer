@@ -1,9 +1,3 @@
-from django.core.serializers import serialize
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import Http404
-from rest_framework.fields import SerializerMethodField
-from rest_framework.serializers import ModelSerializer
-
 from accounts.models import *
 from rest_framework import serializers, filters
 from django.contrib.auth.models import User

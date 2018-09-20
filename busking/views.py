@@ -3,7 +3,9 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import viewsets
 from rest_framework.parsers import MultiPartParser
+from rest_framework.views import APIView
 
+from accounts.models import Busker
 from busking.models import TopBusker
 from busking.models import Post
 from busking.serializers import PostSerializer
@@ -18,6 +20,20 @@ from rest_framework import viewsets, status
 class BuskerRank(viewsets.ModelViewSet):
     queryset = TopBusker.objects.all()
     serializer_class = BuskerRankSerializer
+
+
+class BuskerPostView(APIView):
+    def get_object(self, pk):
+        try:
+            return Busker.objects.get(pk=pk)
+        except Busker.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        event = self.get_object(pk)
+        posts = event.get_posts()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
 
 #게시물 작성 뷰
 class PostView(generics.CreateAPIView):

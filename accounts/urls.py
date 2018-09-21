@@ -9,6 +9,9 @@ urlpatterns = [
     url(r'^login/$', views.CustomObtainAuthToken.as_view()),
     url(r'^sign_up/$', views.SignUp.as_view()),
 
+    #회원탈퇴
+    url(r'^deleteUser/(?P<pk>\d+)/$', views.DeleteUserView.as_view()),
+
     #회원 이미지 업로드
     url(r'^update_profile/(?P<pk>\d+)/$', views.UserDetailEdit.as_view()),
 

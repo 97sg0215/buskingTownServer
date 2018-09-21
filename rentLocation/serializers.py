@@ -8,42 +8,28 @@ from rentLocation.models import ProvideOption, Provide
 class ProvideOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProvideOption
-        fields = ('user', 'provide_option_id', 'provide_option_name', 'provide_price')
+        fields = ('user', 'provide', 'provide_option_id', 'provide_option_name', 'provide_price')
+
+    def create(self, validated_data):
+        return ProvideOption.objects.create(**validated_data)
+
+    # 생성되어 있는 프로필 instance 를 저장한 후 리턴해준다
+    def update(self, instance, validated_data):
+        instance.user = validated_data.get('user', instance.user)
+        instance.provide = validated_data.get('provide', instance.provide)
+        instance.provide_option_id = validated_data.get('provide_option_id', instance.provide_option_id)
+        instance.provide_option_name = validated_data.get('provide_option_name', instance.provide_option_name)
+        instance.provide_price = validated_data.get('provide_price', instance.provide_price)
+        instance.save()
+        return instance
 
 
 class ProvideSerializer(serializers.ModelSerializer):
-    provide_options = ProvideOptionSerializer(many=True, required=False)
-
     class Meta:
         model = Provide
-        owner = serializers.Field(source='owner.username')
         fields = ('provide_id', 'user', 'provide_image', 'provider_phone', 'provide_start_date',
                   'provide_end_date', 'provide_start_time', 'provide_end_time', 'provide_location', 'provide_description', 'provide_rule',
-                  'provide_refund_rule', 'provide_options')
-
-    def create(self, validated_data):
-        user = validated_data.get('user')
-
-        # Get our categories
-        provide_option_data = validated_data.pop('provide_options')
-
-        # Create our item
-        provide = Provide.objects.create(**validated_data)
-
-        # Process the categories. We create any new categories, or return the ID of existing
-        # categories.
-        for provide_options in provide_option_data:
-            provide_options['provide_option_name'] = provide_options['provide_option_name'].title()
-            provide_options, created = ProvideOption.objects.get_or_create(user=user, **provide_options)
-            provide.provide_options.add(provide_options.id)
-
-        provide.save()
-
-        return provide
-
-
-
-
+                  'provide_refund_rule',)
 
 
 

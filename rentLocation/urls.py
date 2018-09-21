@@ -5,15 +5,15 @@ from buskingTownServer import settings
 from rentLocation import views
 
 urlpatterns = [
-    url(r'^provideList/$', views.Provide_View.as_view({'get': 'list'})),
-    #제공장소 삭제
+    url(r'^provideAllList/$', views.ProvideAllList.as_view({'get': 'list'})),
+    url(r'^provideOptionList/(?P<pk>\d+)/$', views.ProvideOptionList.as_view()),
+
+    url(r'^provideList/(?P<pk>\d+)/$', views.ProvideView.as_view()),
+    url(r'^postProvide/$', views.ProvideView.as_view()),
+    url(r'^postProvideOption/$', views.ProvideOptionList.as_view()),
     url(r'^deleteProvide/(?P<pk>\d+)/$', views.ProvideView.as_view()),
-    #제공장소 옵션이랑 같이 확인 url
-    url(r'^provideDetail/(?P<pk>\d+)/$', views.ProvideList.as_view()),
-    #제공장소 수정
-    url(r'^provideUpDate/(?P<pk>\d+)/$', views.ProvideView.as_view()),
-    #제공장소 업로드
-    url(r'^provideUpload/$', views.ProvideList.as_view()),
+    url(r'^updateProvide/(?P<pk>\d+)/$', views.ProvideView.as_view()),
+    url(r'^updateProvideOption/(?P<pk>\d+)/$', views.ProvideOptionList.as_view()),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

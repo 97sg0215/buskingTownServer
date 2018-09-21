@@ -25,7 +25,7 @@ class Provide(models.Model):
 
 class ProvideOption(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    provide = models.ForeignKey(Provide, unique=False, on_delete=models.CASCADE, related_name='provide')
+    provide = models.ForeignKey(Provide, unique=False, on_delete=models.CASCADE, blank=True)
     provide_option_id = models.AutoField(primary_key=True)
     provide_option_name = models.CharField(max_length=20, null=True)
     provide_price = models.IntegerField()

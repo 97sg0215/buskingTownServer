@@ -29,6 +29,21 @@ class UserDetail(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
+class DeleteUserView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticatedOrCreate,)
+
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            raise Http404
+
+    def delete(self, request, pk, format=None):
+        event = self.get_object(pk)
+        event.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 class UserDetailEdit(generics.UpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer

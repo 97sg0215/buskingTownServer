@@ -13,3 +13,4 @@ class ProvideAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(Provide, ProvideAdmin)
+admin.site.register(ProvideOption)

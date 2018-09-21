@@ -26,6 +26,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class ConnectionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Connections

@@ -8,7 +8,8 @@ urlpatterns = [
     #로그인 및 회원가입 url
     url(r'^login/$', views.CustomObtainAuthToken.as_view()),
     url(r'^sign_up/$', views.SignUp.as_view()),
-
+    #비밀번호 변경
+    url(r'^changePassword/(?P<pk>\d+)/$', views.ChangePasswordView.as_view()),
     #회원탈퇴
     url(r'^deleteUser/(?P<pk>\d+)/$', views.DeleteUserView.as_view()),
 

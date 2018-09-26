@@ -3,6 +3,7 @@ import operator
 
 from django.http import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.generics import UpdateAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.views import APIView
 
@@ -192,6 +193,34 @@ class CustomObtainAuthToken(ObtainAuthToken):
         return Response({'token': token.key, 'id': token.user_id, 'username': user.username, 'email': user.email,
                          'user_phone': user.profile.user_phone
                          })
+
+class ChangePasswordView(UpdateAPIView):
+    """
+    An endpoint for changing password.
+    """
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsAuthenticatedOrCreate,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+        # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            return Response("Success.", status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 def push_notify(data):
     pn_client = PushNotifications(

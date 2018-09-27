@@ -7,6 +7,7 @@ from django.db import models
 class Provide(models.Model):
     provide_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    provide_type = models.CharField(max_length=10, null=True)
     provide_image = models.ImageField(upload_to='rentLocation/provide/', null=True, blank=True)
     provider_phone = models.CharField(null=False, max_length=20)
     provide_start_date = models.DateField()

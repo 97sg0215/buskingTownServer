@@ -24,7 +24,7 @@ class ProvideUserView(APIView):
 
     def get(self, request, pk, format=None):
         event = self.get_object(pk)
-        provides = event.get_options()
+        provides = event.get_provides()
         serializer = ProvideSerializer(provides, many=True)
         return Response(serializer.data)
 

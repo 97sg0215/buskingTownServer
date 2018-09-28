@@ -27,7 +27,7 @@ class ProvideOptionSerializer(serializers.ModelSerializer):
 class ProvideSerializer(serializers.ModelSerializer):
     class Meta:
         model = Provide
-        fields = ('provide_id', 'user', 'provide_type', 'provide_image', 'provider_phone', 'provide_start_date',
+        fields = ('provide_id', 'user', 'provide_location_name', 'provide_type', 'provide_image', 'provider_phone', 'provide_start_date',
                   'provide_end_date', 'provide_start_time', 'provide_end_time', 'provide_location', 'provide_description', 'provide_rule',
                   'provide_refund_rule',)
 

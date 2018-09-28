@@ -15,6 +15,9 @@ urlpatterns = [
     url(r'^updateProvide/(?P<pk>\d+)/$', views.ProvideView.as_view()),
     url(r'^updateProvideOption/(?P<pk>\d+)/$', views.ProvideOptionList.as_view()),
 
+    #유저별 장소 제공 리스트
+    url(r'^provideUserList/(?P<pk>\d+)/$', views.ProvideUserView.as_view())
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)

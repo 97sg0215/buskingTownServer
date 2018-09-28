@@ -18,6 +18,11 @@ class Profile(models.Model):
         followings = Connections.objects.filter(user=self.user)
         return followings
 
+    def get_provides(self):
+        from rentLocation.models import Provide
+        provides = Provide.objects.filter(user=self.user)
+        return provides
+
 # post_save 시그널을 받아 user 토큰을 생성한다.
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

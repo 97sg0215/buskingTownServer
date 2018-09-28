@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render
 
@@ -14,6 +15,18 @@ class ProvideAllList(viewsets.ModelViewSet):
     queryset = Provide.objects.all()
     serializer_class = ProvideSerializer
 
+class ProvideUserView(APIView):
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        event = self.get_object(pk)
+        provides = event.get_options()
+        serializer = ProvideSerializer(provides, many=True)
+        return Response(serializer.data)
 
 class ProvideView(generics.CreateAPIView):
     queryset = Provide.objects.all()

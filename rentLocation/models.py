@@ -21,7 +21,7 @@ class Provide(models.Model):
     provide_refund_rule = models.CharField(max_length=500, null=True)
 
     def get_options(self):
-        options = ProvideOption.objects.filter(provide=self.provide_id)
+        options = ProvideOption.objects.filter(provide=self.provide_id).order_by('provide_price')
         return options
 
 

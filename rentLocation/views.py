@@ -95,3 +95,13 @@ class ProvideOptionList(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#버스커가 대여시 보는 화면
+class PracticeRoomList(viewsets.ModelViewSet):
+    queryset = Provide.objects.filter(provide_type="연습실")
+    serializer_class = ProvideSerializer
+
+class ConcertRoomList(viewsets.ModelViewSet):
+    queryset = Provide.objects.filter(provide_type="콘서트")
+    serializer_class = ProvideSerializer

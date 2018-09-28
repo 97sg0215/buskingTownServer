@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render
 
@@ -8,6 +7,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.models import Profile
 from rentLocation.models import Provide, ProvideOption
 from rentLocation.serializers import ProvideSerializer, ProvideOptionSerializer
 
@@ -18,8 +18,8 @@ class ProvideAllList(viewsets.ModelViewSet):
 class ProvideUserView(APIView):
     def get_object(self, pk):
         try:
-            return User.objects.get(pk=pk)
-        except User.DoesNotExist:
+            return Profile.objects.get(pk=pk)
+        except Profile.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):

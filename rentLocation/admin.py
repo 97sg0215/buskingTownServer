@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from rentLocation.models import ProvideOption, Provide
+from rentLocation.models import *
 
 
 class ProvideOptionInline(admin.StackedInline):
@@ -14,3 +14,4 @@ class ProvideAdmin(admin.ModelAdmin):
 
 admin.site.register(Provide, ProvideAdmin)
 admin.site.register(ProvideOption)
+admin.site.register(ReservationPracticeRoom)

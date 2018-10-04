@@ -22,6 +22,9 @@ urlpatterns = [
     url(r'^practiceRoomList/$', views.PracticeRoomList.as_view({'get': 'list'})),
     url(r'^concertRoomList/$', views.ConcertRoomList.as_view({'get':'list'})),
 
+    #예약
+    url(r'^reservationPracticeRoom/$', views.ReservationPracticeRoom.as_view()),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns(urlpatterns)

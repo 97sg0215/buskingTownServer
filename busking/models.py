@@ -15,7 +15,7 @@ class Post(models.Model):
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
     post_image = models.ImageField(upload_to='busking/post_image/', blank=True, null=True)
     content = models.CharField(max_length=4096, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, auto_created=True)
+    created_at = models.DateField(auto_now_add=True, auto_created=True)
 
 #코인
 class supportCoin(models.Model):

@@ -6,20 +6,13 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 
 from accounts.models import Busker
-from busking.models import TopBusker
 from busking.models import Post
 from busking.serializers import PostSerializer
-from busking.serializers import BuskerRankSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import viewsets, status
-
-#버스커 랭킹 뷰
-class BuskerRank(viewsets.ModelViewSet):
-    queryset = TopBusker.objects.all()
-    serializer_class = BuskerRankSerializer
 
 
 class BuskerPostView(APIView):

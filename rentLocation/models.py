@@ -16,7 +16,6 @@ class Provide(models.Model):
     provider_phone = models.CharField(null=False, max_length=20)
     provide_start_date = models.DateField()
     provide_end_date = models.DateField()
-    available_dates = models.DateField(null=True)
     provide_start_time = models.TimeField()
     provide_end_time = models.TimeField()
     provide_location = models.CharField(max_length=200)

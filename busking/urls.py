@@ -5,8 +5,6 @@ from buskingTownServer import settings
 from busking import views
 
 urlpatterns = [
-    #버스커 랭킹 url
-    url(r'^buskerRank/$', views.BuskerRank),
 
     ### 이곳에 들어가는 pk는 포스트 id임 ###
     #게시물 업로드 url

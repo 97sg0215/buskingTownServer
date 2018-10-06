@@ -18,9 +18,12 @@ from pusher_push_notifications import PushNotifications
 from accounts.permissions import IsAuthenticatedOrCreate
 from django.contrib.auth.models import User
 
-from django.db.models import Sum,F
+from django.db.models import Sum, F, Q
 
 # generics 에 목록과 생성 API 가 정의되어 있다
+from busking.models import Post
+
+
 class UserList(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -104,7 +107,9 @@ class ConnectionsView(generics.CreateAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ScoreListView(generics.ListAPIView):
-    queryset = Busker.objects.filter(busker_type=1, certification=True).prefetch_related('friend_set').annotate(score=models.F('received_coin') + models.Count('friend_set__following_id')).order_by('-score')
+ #   queryset = Busker.objects.filter(busker_type=1, certification=True).prefetch_related('friend_set').annotate(score=models.F('received_coin') + models.Count('friend_set__following_id')).order_by('-score')
+    queryset = Busker.objects.filter(busker_type=1, certification=True).prefetch_related('friend_set').annotate(
+        score=models.F('received_coin') + models.Count('friend_set__following_id') + models.Count('busker_post__busker_id', filter=Q(busker_post__likes=True))).order_by('-score')
     serializer_class = ScoreSerializer
 
 class FollowerList(APIView):

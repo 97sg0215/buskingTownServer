@@ -2,8 +2,6 @@ from accounts.models import *
 from rest_framework import serializers, filters
 from django.contrib.auth.models import User
 from accounts.models import Profile
-from busking.models import TopBusker
-from busking.serializers import BuskerRankSerializer
 from django.db.models import Sum,F
 
 
@@ -34,6 +32,7 @@ class ConnectionsSerializer(serializers.ModelSerializer):
 
 class ScoreSerializer(serializers.ModelSerializer):
     follower_count = serializers.SerializerMethodField()
+    posts_like = serializers.SerializerMethodField()
     score = serializers.SerializerMethodField()
 
     def get_follower_count(self, obj):
@@ -41,15 +40,22 @@ class ScoreSerializer(serializers.ModelSerializer):
         connected = Connections.objects.filter(following=following)
         return len(connected)
 
+    def get_posts_like(self, obj):
+        from busking.models import Post
+        busker_id = obj.busker_id
+        posts = Post.objects.filter(busker=busker_id, likes=True).values("likes")
+        return len(posts)
+
     def get_score(self, obj):
         coin_amount = obj.received_coin
         follower_cnt = obj.get_followers()
-        score = coin_amount + len(follower_cnt)
+        likes_cnt = obj.get_like()
+        score = coin_amount + len(follower_cnt) + likes_cnt
         return score
 
     class Meta:
         model = Busker
-        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'received_coin', 'follower_count', 'score')
+        fields = ('user', 'busker_id', 'busker_name', 'busker_type', 'team_name', 'busker_phone', 'busker_tag', 'busker_image', 'certification', 'received_coin', 'follower_count', 'posts_like', 'score')
 
 
 #버스커 객체 직렬화
@@ -64,10 +70,9 @@ class BuskerSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(required=True)
     busker = BuskerSerializer(required=True)
-    busker_rank = BuskerRankSerializer(required=True, write_only=True)
     class Meta:
         model = User
-        fields = ('id', 'url', 'email', 'username', 'profile', 'busker', 'busker_rank')
+        fields = ('id', 'url', 'email', 'username', 'profile', 'busker')
 
     def create(self, validated_data):
         # create user
@@ -100,13 +105,6 @@ class UserSerializer(serializers.ModelSerializer):
             certification=busker_data['certification'],
             received_coin=busker_data['received_coin'],
             score=busker_data['score']
-        )
-
-        busker_rank_data = validated_data.pop('busker_rank')
-        busker_rank = TopBusker.objects.create(
-            user=user,
-            busker=busker_rank_data['busker'],
-            busker_rank=busker_rank_data['busker_rank']
         )
 
         return user

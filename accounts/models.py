@@ -57,6 +57,11 @@ class Busker(models.Model):
         posts = Post.objects.filter(busker=self.busker_id)
         return posts
 
+    def get_like(self):
+        from busking.models import Post
+        posts = Post.objects.filter(busker=self.busker_id, likes=True).values("likes")
+        return len(posts)
+
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)

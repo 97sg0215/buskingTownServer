@@ -20,8 +20,8 @@ class supportCoin(models.Model):
     supportCoin_id = models.AutoField(primary_key=True)
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    coin_amount = models.IntegerField(null=True)
-    supportDate = models.DateTimeField(auto_now_add=True, auto_created=True, null=True)
+    coin_amount = models.IntegerField(null=False)
+    supportDate = models.DateField(auto_now_add=True, auto_created=True)
 
 
 

@@ -100,11 +100,11 @@ class ProvideOptionList(APIView):
 
 #버스커가 대여시 보는 화면
 class PracticeRoomList(viewsets.ModelViewSet):
-    queryset = Provide.objects.filter(provide_type="연습실")
+    queryset = Provide.objects.filter(provide_type="1")
     serializer_class = ProvideSerializer
 
 class ConcertRoomList(viewsets.ModelViewSet):
-    queryset = Provide.objects.filter(provide_type="콘서트")
+    queryset = Provide.objects.filter(provide_type="2")
     serializer_class = ProvideSerializer
 
 # #버스커가 예약할때

@@ -10,18 +10,18 @@ from accounts.models import Busker
 class Provide(models.Model):
     provide_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    provide_location_name = models.CharField(max_length=50, null=True)
-    provide_type = models.CharField(max_length=10, null=True)
-    provide_image = models.ImageField(upload_to='rentLocation/provide/', null=True, blank=True)
+    provide_location_name = models.CharField(max_length=50, null=False)
+    provide_type = models.IntegerField(null=False)
+    provide_image = models.ImageField(upload_to='rentLocation/provide/', null=False)
     provider_phone = models.CharField(null=False, max_length=20)
-    provide_start_date = models.DateField()
-    provide_end_date = models.DateField()
-    provide_start_time = models.TimeField()
-    provide_end_time = models.TimeField()
-    provide_location = models.CharField(max_length=200)
-    provide_description = models.CharField(max_length=200, null=True)
-    provide_rule = models.CharField(max_length=500, null=True)
-    provide_refund_rule = models.CharField(max_length=500, null=True)
+    provide_start_date = models.DateField(null=False)
+    provide_end_date = models.DateField(null=False)
+    provide_start_time = models.TimeField(null=False)
+    provide_end_time = models.TimeField(null=False)
+    provide_location = models.CharField(null=False,max_length=200)
+    provide_description = models.CharField(null=False,max_length=200)
+    provide_rule = models.CharField(null=False, max_length=500)
+    provide_refund_rule = models.CharField(null=False, max_length=500)
 
     def get_options(self):
         options = ProvideOption.objects.filter(provide=self.provide_id).order_by('provide_price')
@@ -32,18 +32,18 @@ class ProvideOption(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     provide = models.ForeignKey(Provide, unique=False, on_delete=models.CASCADE, blank=True)
     provide_option_id = models.AutoField(primary_key=True)
-    provide_option_name = models.CharField(max_length=20, null=True)
-    provide_price = models.IntegerField()
+    provide_option_name = models.CharField(max_length=20, null=False)
+    provide_price = models.IntegerField(null=False)
 
 
 class ReservationPracticeRoom(models.Model):
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
     provide = models.ForeignKey(Provide, on_delete=models.CASCADE)
     reservation_id = models.AutoField(primary_key=True)
-    practice_date = models.DateField()
-    practice_start_time = models.TimeField(null=True)
-    practice_end_time = models.TimeField(null=True)
-    practice_fee = models.IntegerField()
+    practice_date = models.DateField(null=False)
+    practice_start_time = models.TimeField(null=False)
+    practice_end_time = models.TimeField(null=False)
+    practice_fee = models.IntegerField(null=False)
 
 
     # def reservation_date(self):

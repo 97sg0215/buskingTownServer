@@ -11,7 +11,7 @@ from django.db.models import F, Sum, Count, Case, When, Value
 #장고 기본 제공 되는 user 모델과 1대1매핑 하여 확장
 class Profile(models.Model):
     user = models.OneToOneField(User, primary_key=True, unique=False, on_delete=models.CASCADE, blank=True)
-    user_phone = models.CharField(max_length=20, blank=True)
+    user_phone = models.CharField(max_length=20, null=False)
     user_image = models.ImageField(upload_to='user_profile/', null=True, blank=True)
 
     def get_followings(self):
@@ -33,12 +33,12 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class Busker(models.Model):
     user = models.OneToOneField(User, unique=False, on_delete=models.CASCADE)
     busker_id = models.AutoField(primary_key=True)
-    busker_name = models.CharField(null=True, max_length=50, blank=True, unique=True)
-    busker_type = models.IntegerField(null=True, blank=True)
-    team_name = models.CharField(null=True, max_length=50, blank=True)
-    busker_tag = models.CharField(null=True, max_length=200, blank=True)
-    busker_phone = models.CharField(null=True, max_length=20, blank=True)
-    busker_image = models.ImageField(upload_to='accounts/certification/', null=True, blank=True)
+    busker_name = models.CharField(null=False, max_length=50, blank=True, unique=True)
+    busker_type = models.IntegerField(null=False, blank=True)
+    team_name = models.CharField(null=False, max_length=50, blank=True)
+    busker_tag = models.CharField(null=False, max_length=200, blank=True)
+    busker_phone = models.CharField(null=False, max_length=20, blank=True)
+    busker_image = models.ImageField(upload_to='accounts/certification/', null=False, blank=True)
     certification = models.NullBooleanField(default=None, blank=True)
     received_coin = models.IntegerField(blank=True, default=0)
 

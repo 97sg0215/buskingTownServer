@@ -12,6 +12,7 @@ class Post(models.Model):
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE, related_name="busker_post")
     post_image = models.ImageField(upload_to='busking/post_image/', blank=True, null=True)
     likes = models.BooleanField(blank=True, default=False)
+    likes_count = models.IntegerField(default=0,null=True)
     content = models.CharField(max_length=4096, null=True)
     created_at = models.DateField(auto_now_add=True, auto_created=True)
 

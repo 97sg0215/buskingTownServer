@@ -7,4 +7,4 @@ from busking.models import Post
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ('post_id', 'busker', 'post_image', 'content', 'likes', 'created_at')
+        fields = ('post_id', 'busker', 'post_image', 'content', 'likes', 'created_at', 'likes_count')

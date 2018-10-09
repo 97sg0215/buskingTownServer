@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'^following/$', views.ConnectionsView.as_view()),
     #팔로잉 삭제
     url(r'^unfollowing/(?P<pk>\d+)/$', views.ConnectionsView.as_view()),
+    
+    #게시물 좋아요 체크
+    url(r'^likeCheck/(?P<pk>\d+)/$', views.LikeCheckList.as_view()),
 
     #버스커 인증 url
     url(r'^certification/$', views.BuskerView.as_view()),

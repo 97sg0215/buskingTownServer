@@ -22,6 +22,7 @@ from django.db.models import Sum, F, Q
 
 # generics 에 목록과 생성 API 가 정의되어 있다
 from busking.models import Post
+from busking.serializers import LikePostSerializer
 
 
 class UserList(viewsets.ModelViewSet):
@@ -135,6 +136,32 @@ class FollowingList(APIView):
         event = self.get_object(pk)
         followings = event.get_followings()
         serializer = ConnectionsSerializer(followings, many=True)
+        return Response(serializer.data)
+
+class FollowingList(APIView):
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        followings = event.get_followings()
+        serializer = ConnectionsSerializer(followings, many=True)
+        return Response(serializer.data)
+
+class LikeCheckList(APIView):
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        liked = event.get_liked()
+        serializer = LikePostSerializer(liked, many=True)
         return Response(serializer.data)
 
 #이미지 전송을 위해 json형식이 아닌 formparser로 데이터 전송

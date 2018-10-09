@@ -6,6 +6,9 @@ from django.db.models import Sum,F
 
 
 #사용자 프로필 객체 직렬화
+from busking.models import LikePost
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     # ModelSerializer 를 이용해서 아래와 같이 짧은 코드로 직렬화 필드를 정의할 수 있다
     class Meta:
@@ -43,14 +46,14 @@ class ScoreSerializer(serializers.ModelSerializer):
     def get_posts_like(self, obj):
         from busking.models import Post
         busker_id = obj.busker_id
-        posts = Post.objects.filter(busker=busker_id, likes=True).values("likes")
+        posts = LikePost.objects.filter(busker=busker_id)
         return len(posts)
 
     def get_score(self, obj):
         coin_amount = obj.received_coin
         follower_cnt = obj.get_followers()
         likes_cnt = obj.get_like()
-        score = coin_amount + len(follower_cnt) + likes_cnt
+        score = coin_amount + len(follower_cnt) + len(likes_cnt)
         return score
 
     class Meta:

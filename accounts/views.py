@@ -107,9 +107,8 @@ class ConnectionsView(generics.CreateAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ScoreListView(generics.ListAPIView):
- #   queryset = Busker.objects.filter(busker_type=1, certification=True).prefetch_related('friend_set').annotate(score=models.F('received_coin') + models.Count('friend_set__following_id')).order_by('-score')
-    queryset = Busker.objects.filter(busker_type=1, certification=True).prefetch_related('friend_set').annotate(
-        score=models.F('received_coin') + models.Count('friend_set__following_id') + models.Count('busker_post__busker_id', filter=Q(busker_post__likes=True))).order_by('-score')
+    queryset = Busker.objects.filter(busker_type=1, certification=True).prefetch_related('friend_set', 'likes').annotate(
+        score=models.F('received_coin') + models.Count('friend_set__following_id') + models.Count('likes')).order_by('-score')
     serializer_class = ScoreSerializer
 
 class FollowerList(APIView):

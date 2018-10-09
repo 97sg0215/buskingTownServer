@@ -19,8 +19,10 @@ urlpatterns = [
     url(r'postUpdate/(?P<pk>\d+)/$', views.PostView.as_view()),
 
     ### 이곳에 들어가는 pk는 버스커 id임 ###
-    #각 버스커 별 팔로워 목록
     url(r'^buskerPostList/(?P<pk>\d+)/$', views.BuskerPostView.as_view()),
+
+    url(r'^likePost/$', views.LikePostView.as_view()),
+    url(r'^unlikePost/(?P<pk>\d+)/$', views.LikePostView.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

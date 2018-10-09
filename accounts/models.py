@@ -58,9 +58,9 @@ class Busker(models.Model):
         return posts
 
     def get_like(self):
-        from busking.models import Post
-        posts = Post.objects.filter(busker=self.busker_id, likes=True).values("likes")
-        return len(posts)
+        from busking.models import LikePost
+        like_posts = LikePost.objects.filter(busker=self.busker_id)
+        return like_posts
 
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)

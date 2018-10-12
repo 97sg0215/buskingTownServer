@@ -97,7 +97,6 @@ class ConnectionsView(generics.CreateAPIView):
         serializer_class = ConnectionsSerializer(data=request.data)
         if serializer_class.is_valid():
             serializer_class.save()
-            push_notify(Connections.following)
             return Response(serializer_class.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -252,17 +251,17 @@ class ChangePasswordView(UpdateAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-def push_notify(data):
-    pn_client = PushNotifications(
-        instance_id='4c4a8894-87b8-4006-8e7e-b2b57fa83b79',
-        secret_key='3A16D47264DFF2A3D50223DA373AB12A0D70924121B9CF6E98FEDB723F16C91B',
-    )
-
-    response = pn_client.publish(
-        interests=['hello'],
-        publish_body={'apns': {'aps': {'alert': 'follow'}},
-                      'fcm': {'notification': {'title': 'test', 'body': str(data)}}}
-    )
-
-    print(response['publishId'])
+#
+# def push_notify(data):
+#     pn_client = PushNotifications(
+#         instance_id='4c4a8894-87b8-4006-8e7e-b2b57fa83b79',
+#         secret_key='3A16D47264DFF2A3D50223DA373AB12A0D70924121B9CF6E98FEDB723F16C91B',
+#     )
+#
+#     response = pn_client.publish(
+#         interests=['hello'],
+#         publish_body={'apns': {'aps': {'alert': 'follow'}},
+#                       'fcm': {'notification': {'title': 'test', 'body': str(data)}}}
+#     )
+#
+#     print(response['publishId'])

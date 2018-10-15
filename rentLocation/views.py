@@ -1,15 +1,22 @@
+from datetime import timedelta
+
 from django.http import Http404
 from django.shortcuts import render
 
 # Create your views here.
+from django.utils import timezone
 from rest_framework import generics, status, viewsets
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import Profile
+from rentLocation import models
 from rentLocation.models import Provide, ProvideOption, ReservationPracticeRoom
 from rentLocation.serializers import ProvideSerializer, ProvideOptionSerializer, ReservationPracticeRoomSerializer
+
+from django.db.models import Sum, F, Q
+
 
 
 class ProvideAllList(viewsets.ModelViewSet):
@@ -100,17 +107,20 @@ class ProvideOptionList(APIView):
 
 #버스커가 대여시 보는 화면
 class PracticeRoomList(viewsets.ModelViewSet):
-    queryset = Provide.objects.filter(provide_type=1)
+    #제공하는 날짜와 시간
+    available_start_date = Provide.objects.values('provide_start_date')
+    available_end_date = Provide.objects.values('provide_end_date')
+
+    #오늘 날짜
+    today_date = timezone.now().date()
+
+    queryset = Provide.objects.filter(provide_type=1).exclude(provide_end_date__lte=timezone.now().date()).prefetch_related('reservation_provide')
     serializer_class = ProvideSerializer
+
 
 class ConcertRoomList(viewsets.ModelViewSet):
     queryset = Provide.objects.filter(provide_type=2)
     serializer_class = ProvideSerializer
-
-# #버스커가 예약할때
-# class ReservationPracticeRoom_ex(generics.CreateAPIView):
-#     queryset = ReservationPracticeRoom.objects.valuse('practice_date')
-#     serializer_class = ReservationPracticeRoomSerializer
 
 
 class ReservationPracticeRoom(APIView):
@@ -128,24 +138,6 @@ class ReservationPracticeRoom(APIView):
     def post(self, request, *args, **kwargs):
         serializer_class = ReservationPracticeRoomSerializer(data=request.data)
 
-        #나를 제외한 다른 모델의 연습날짜 데이터
-        # other_date = ReservationPracticeRoom.objects.values('practice_date').exclude(provide=self.provide)
-        #
-        # other_start_time = ReservationPracticeRoom.objects.values('practice_start_time').exclude(provide=self.provide)
-        # other_end_time = ReservationPracticeRoom.objects.values('practice_end_time').exclude(provide=self.provide)
-        #
-        # other_time = ReservationPracticeRoom.objects.filter(
-        #     practice_start_time__range=(other_start_time, other_end_time))
-        #
-        # available_start_time = Provide.objects.values('provide_start_time')
-        # available_end_time = Provide.objects.values('provide_end_time')
-        #
-        # available_time = ReservationPracticeRoom.objects.filter(
-        #     practice_start_time__range=(available_start_time, available_end_time))
-        #
-        # this_date = ReservationPracticeRoom.objects.filter(provide=self.provide).values('practice_date')
-        # this_time = ReservationPracticeRoom.objects.filter(provide=self.provide).values('practice_start_time')
-
         if serializer_class.is_valid():
             serializer_class.save()
             return Response(serializer_class.data, status=status.HTTP_201_CREATED)
@@ -159,3 +151,4 @@ class ReservationPracticeRoom(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

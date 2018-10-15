@@ -14,6 +14,7 @@ class Provide(models.Model):
     provide_type = models.IntegerField(null=False)
     provide_image = models.ImageField(upload_to='rentLocation/provide/', null=False)
     provider_phone = models.CharField(null=False, max_length=20)
+    provider_email = models.EmailField(null=True)
     provide_start_date = models.DateField(null=False)
     provide_end_date = models.DateField(null=False)
     provide_start_time = models.TimeField(null=False)
@@ -27,6 +28,20 @@ class Provide(models.Model):
         options = ProvideOption.objects.filter(provide=self.provide_id).order_by('provide_price')
         return options
 
+    # def reservation_check(self):
+    #     #다른 예약 시간
+    #     other_start_time = ReservationPracticeRoom.objects.filter(provide=self.provide_id).values('practice_start_time')
+    #     other_end_time = ReservationPracticeRoom.objects.filter(provide=self.provide_id).values('practice_end_time')
+    #
+    #     #다른 예약 시간
+    #     l = ReservationPracticeRoom.objects.filter(provide=self.provide_id,
+    #                                            practice_start_time__gte=self.provide_start_time,
+    #                                            practice_end_time__lte=self.provide_end_time,
+    #                                            practice_date__gte=datetime.date.today(),
+    #                                            practice_date__lte=self.provide_end_date)
+    #
+    #     return l
+
 
 class ProvideOption(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -38,26 +53,11 @@ class ProvideOption(models.Model):
 
 class ReservationPracticeRoom(models.Model):
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
-    provide = models.ForeignKey(Provide, on_delete=models.CASCADE)
+    provide = models.ForeignKey(Provide, on_delete=models.CASCADE, related_name='reservation_provide')
     reservation_id = models.AutoField(primary_key=True)
     practice_date = models.DateField(null=False)
     practice_start_time = models.TimeField(null=False)
     practice_end_time = models.TimeField(null=False)
     practice_fee = models.IntegerField(null=False)
-
-
-    # def reservation_date(self):
-    #     start_date = datetime.date.today()
-
-    #     provide_start_date_q = Provide.objects.filter(provide_id=self.provide).values('provide_start_date')
-    #     provide_end_date_q = Provide.objects.filter(provide_id=self.provide).values('provide_end_date')
-    #
-    #     available_date = ReservationPracticeRoom.objects.filter(practice_date__range=(provide_start_date_q, provide_end_date_q)).values('practice_date')
-    #
-    #     return available_date;
-
-
-        #ReservationPracticeRoom.objects.annotate(practice_date__range=[provide_start_date_q, provide_end_date_q])
-
 
 

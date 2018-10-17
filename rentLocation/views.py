@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from django.utils import timezone
@@ -123,6 +123,21 @@ class ConcertRoomList(viewsets.ModelViewSet):
     serializer_class = ProvideSerializer
 
 
+#예약된거 보기
+class ReservationPractice(generics.ListAPIView):
+   serializer_class = ReservationPracticeRoomSerializer
+
+   def get_queryset(self):
+       """
+       This view should return a list of all the purchases for
+       the user as determined by the username portion of the URL.
+       """
+       provide = self.kwargs['provide']
+       provide_option = self.kwargs['provide_option']
+       practice_date = self.kwargs['practice_date']
+
+       return ReservationPracticeRoom.objects.filter(provide=provide, provide_option=provide_option, practice_date=practice_date)
+
 class ReservationPracticeRoom(APIView):
     def get_object(self, pk):
         try:
@@ -137,7 +152,6 @@ class ReservationPracticeRoom(APIView):
 
     def post(self, request, *args, **kwargs):
         serializer_class = ReservationPracticeRoomSerializer(data=request.data)
-
         if serializer_class.is_valid():
             serializer_class.save()
             return Response(serializer_class.data, status=status.HTTP_201_CREATED)
@@ -152,3 +166,7 @@ class ReservationPracticeRoom(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, pk, format=None):
+        event = self.get_object(pk)
+        event.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

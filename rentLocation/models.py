@@ -28,19 +28,12 @@ class Provide(models.Model):
         options = ProvideOption.objects.filter(provide=self.provide_id).order_by('provide_price')
         return options
 
-    # def reservation_check(self):
-    #     #다른 예약 시간
-    #     other_start_time = ReservationPracticeRoom.objects.filter(provide=self.provide_id).values('practice_start_time')
-    #     other_end_time = ReservationPracticeRoom.objects.filter(provide=self.provide_id).values('practice_end_time')
-    #
-    #     #다른 예약 시간
-    #     l = ReservationPracticeRoom.objects.filter(provide=self.provide_id,
-    #                                            practice_start_time__gte=self.provide_start_time,
-    #                                            practice_end_time__lte=self.provide_end_time,
-    #                                            practice_date__gte=datetime.date.today(),
-    #                                            practice_date__lte=self.provide_end_date)
-    #
-    #     return l
+
+    def reservation_check(self):
+        #다른 예약 시간
+        l = ReservationPracticeRoom.objects.filter(provide=self.provide_id)
+
+        return l
 
 
 class ProvideOption(models.Model):
@@ -54,6 +47,7 @@ class ProvideOption(models.Model):
 class ReservationPracticeRoom(models.Model):
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
     provide = models.ForeignKey(Provide, on_delete=models.CASCADE, related_name='reservation_provide')
+    provide_option = models.ForeignKey(ProvideOption, on_delete=models.CASCADE, related_name='reservation_provide_option')
     reservation_id = models.AutoField(primary_key=True)
     practice_date = models.DateField(null=False)
     practice_start_time = models.TimeField(null=False)

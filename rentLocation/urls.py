@@ -22,7 +22,9 @@ urlpatterns = [
     url(r'^practiceRoomList/$', views.PracticeRoomList.as_view({'get': 'list'})),
     url(r'^concertRoomList/$', views.ConcertRoomList.as_view({'get':'list'})),
 
-    #예약
+    #예약보기
+    url(r'^reservationPracticeRoom/(?P<provide>\d+)/(?P<provide_option>\d+)/(?P<practice_date>[-\w]+)/$', views.ReservationPractice.as_view()),
+    #예약하기
     url(r'^reservationPracticeRoom/$', views.ReservationPracticeRoom.as_view()),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

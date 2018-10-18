@@ -138,7 +138,7 @@ class ReservationPractice(generics.ListAPIView):
 
        return ReservationPracticeRoom.objects.filter(provide=provide, provide_option=provide_option, practice_date=practice_date)
 
-class ReservationPracticeRoom(APIView):
+class Reservation(APIView):
     def get_object(self, pk):
         try:
             return ReservationPracticeRoom.objects.get(pk=pk)

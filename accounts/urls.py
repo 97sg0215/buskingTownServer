@@ -38,7 +38,10 @@ urlpatterns = [
     url(r'^buskerDetail/(?P<pk>\d+)/$', views.BuskerView.as_view()),
 
     #버스커 랭킹 정렬
-    url(r'^buskerRank/$', views.ScoreListView.as_view())
+    url(r'^buskerRank/$', views.ScoreListView.as_view()),
+
+    #받은 코인 리스트
+    url(r'^coin/(?P<pk>\d+)/$', views.CoinList.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

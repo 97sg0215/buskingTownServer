@@ -67,6 +67,11 @@ class Busker(models.Model):
         like_posts = LikePost.objects.filter(busker=self.busker_id)
         return like_posts
 
+    def get_coin(self):
+        from busking.models import supportCoin
+        supportCoin = supportCoin.objects.filter(busker=self.busker_id)
+        return supportCoin
+
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)

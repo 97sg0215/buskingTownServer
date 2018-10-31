@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^reservationPracticeRoom/(?P<provide>\d+)/(?P<provide_option>\d+)/(?P<practice_date>[-\w]+)/$', views.ReservationPractice.as_view()),
     #예약하기
     url(r'^reservationPracticeRoom/$', views.Reservation.as_view()),
+    #예약취소
+    url(r'^cancelReservationPracticeRoom/(?P<pk>\d+)/$', views.Reservation.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

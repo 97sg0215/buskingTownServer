@@ -13,6 +13,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, primary_key=True, unique=False, on_delete=models.CASCADE, blank=True)
     user_phone = models.CharField(max_length=20, null=False)
     user_image = models.ImageField(upload_to='user_profile/', null=True, blank=True)
+    purchase_coin = models.IntegerField(null=True)
 
     def get_followings(self):
         followings = Connections.objects.filter(user=self.user)

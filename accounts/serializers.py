@@ -13,7 +13,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     # ModelSerializer 를 이용해서 아래와 같이 짧은 코드로 직렬화 필드를 정의할 수 있다
     class Meta:
         model = Profile
-        fields = ('user', 'user_phone', 'user_image')
+        fields = ('user', 'user_phone', 'user_image', 'purchase_coin')
 
     # 신규 프로필 instance를 생성해서 리턴해준다
     def create(self, validated_data):
@@ -24,6 +24,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.user = validated_data.get('user', instance.user)
         instance.user_phone = validated_data.get('user_phone', instance.user_phone)
         instance.user_image = validated_data.get('user_image', instance.user_image)
+        instance.purchase_coin = validated_data.get('purchase_coin',instance.purchase_coin)
         instance.save()
         return instance
 
@@ -75,7 +76,7 @@ class UserSerializer(serializers.ModelSerializer):
     busker = BuskerSerializer(required=True)
     class Meta:
         model = User
-        fields = ('id', 'url', 'email', 'username', 'profile', 'busker')
+        fields = ('id', 'url', 'email', 'username', 'purchase_coin' ,'profile', 'busker')
 
     def create(self, validated_data):
         # create user
@@ -83,7 +84,8 @@ class UserSerializer(serializers.ModelSerializer):
             id=validated_data['id'],
             url=validated_data['url'],
             email=validated_data['email'],
-            username=validated_data['username']
+            username=validated_data['username'],
+            purchase_coin=validated_data['purchase_coin']
         )
 
         profile_data = validated_data.pop('profile')

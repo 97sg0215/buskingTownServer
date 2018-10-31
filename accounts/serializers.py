@@ -76,7 +76,7 @@ class UserSerializer(serializers.ModelSerializer):
     busker = BuskerSerializer(required=True)
     class Meta:
         model = User
-        fields = ('id', 'url', 'email', 'username', 'purchase_coin' ,'profile', 'busker')
+        fields = ('id', 'url', 'email', 'username', 'profile', 'busker')
 
     def create(self, validated_data):
         # create user
@@ -84,8 +84,7 @@ class UserSerializer(serializers.ModelSerializer):
             id=validated_data['id'],
             url=validated_data['url'],
             email=validated_data['email'],
-            username=validated_data['username'],
-            purchase_coin=validated_data['purchase_coin']
+            username=validated_data['username']
         )
 
         profile_data = validated_data.pop('profile')
@@ -93,7 +92,8 @@ class UserSerializer(serializers.ModelSerializer):
         profile = Profile.objects.create(
             user=user,
             user_phone=profile_data['user_phone'],
-            user_image=profile_data['user_image']
+            user_image=profile_data['user_image'],
+            purchase_coin=validated_data['purchase_coin']
         )
 
         busker_data = validated_data.pop('busker')

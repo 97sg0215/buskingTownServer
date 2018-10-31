@@ -72,6 +72,11 @@ class Busker(models.Model):
         supportCoin = supportCoin.objects.filter(busker=self.busker_id)
         return supportCoin
 
+    def get_practice_reservation(self):
+        from rentLocation.models import ReservationPracticeRoom
+        practiceRoom = ReservationPracticeRoom.objects.filter(busker=self.busker_id)
+        return practiceRoom
+
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)

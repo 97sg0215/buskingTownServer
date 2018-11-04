@@ -178,6 +178,22 @@ class CoinList(APIView):
         serializer = SupportCoinSerializer(coin, many=True)
         return Response(serializer.data)
 
+class PurchaseCoinView(generics.CreateAPIView):
+    queryset = Purchase.objects.all()
+    serializer_class = PurchaseCoinSerializer
+
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        event = self.get_object(pk)
+        coin = event.get_purchase_coin()
+        serializer = PurchaseCoinSerializer(coin, many=True)
+        return Response(serializer.data)
+
 class SendCoinList(APIView):
     def get_object(self, pk):
         try:

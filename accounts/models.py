@@ -34,6 +34,10 @@ class Profile(models.Model):
         send_coin = supportCoin.objects.filter(user=self.user)
         return send_coin
 
+    def get_purchase_coin(self):
+        purchase_coin = Purchase.objects.filter(user=self.user)
+        return purchase_coin
+
 # post_save 시그널을 받아 user 토큰을 생성한다.
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
@@ -87,5 +91,11 @@ class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
     following = models.ForeignKey(Busker, unique=False, related_name="friend_set", on_delete=models.CASCADE)
+
+class Purchase(models.Model):
+    purchase_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, unique=False, on_delete=models.CASCADE)
+    purchase_coin_amount = models.IntegerField(null=True)
+    purchase_date = models.DateField(auto_now_add=True, auto_created=True)
 
 

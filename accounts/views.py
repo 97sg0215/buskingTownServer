@@ -64,7 +64,7 @@ class UserDetailEdit(generics.UpdateAPIView):
 
     def put(self, request, pk, format=None):
         Profile = self.get_object(pk)
-        serializer = ProfileSerializer(Profile, data=request.data)
+        serializer = ProfileSerializer(Profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -178,6 +178,19 @@ class CoinList(APIView):
         serializer = SupportCoinSerializer(coin, many=True)
         return Response(serializer.data)
 
+class SendCoinList(APIView):
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        coin = event.get_post_coin()
+        serializer = SupportCoinSerializer(coin, many=True)
+        return Response(serializer.data)
+
 class PracticeList(APIView):
     def get_object(self, pk):
         try:
@@ -222,7 +235,7 @@ class BuskerView(generics.CreateAPIView):
 
     def put(self, request, pk, format=None):
         Busker = self.get_object(pk)
-        serializer = BuskerSerializer(Busker, data=request.data)
+        serializer = BuskerSerializer(Busker, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

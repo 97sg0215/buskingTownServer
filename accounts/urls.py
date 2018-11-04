@@ -42,6 +42,8 @@ urlpatterns = [
 
     #받은 코인 리스트
     url(r'^coin/(?P<pk>\d+)/$', views.CoinList.as_view()),
+    #보낸 코인 리스트
+    url(r'^sendCoin/(?P<pk>\d+)/$', views.SendCoinList.as_view()),
 
     #예약한 연습실 리스트
     url(r'reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view())

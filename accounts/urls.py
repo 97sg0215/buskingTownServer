@@ -44,6 +44,10 @@ urlpatterns = [
     url(r'^coin/(?P<pk>\d+)/$', views.CoinList.as_view()),
     #보낸 코인 리스트
     url(r'^sendCoin/(?P<pk>\d+)/$', views.SendCoinList.as_view()),
+    #코인 구입
+    url(r'^purchaseCoin/$', views.PurchaseCoinView.as_view()),
+    #구입한 코인 리스트
+    url(r'^purchaseCoin/(?P<pk>\d+)/$', views.PurchaseCoinView.as_view()),
 
     #예약한 연습실 리스트
     url(r'reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view())

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'oauth2_provider',
     'django_crontab',
+    'drf_multiple_model',
     # custom app
     'accounts',
     'busking',

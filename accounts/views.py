@@ -17,11 +17,11 @@ from pusher_push_notifications import PushNotifications
 
 from accounts.permissions import IsAuthenticatedOrCreate
 from django.contrib.auth.models import User
-
+from drf_multiple_model.views import ObjectMultipleModelAPIView, FlatMultipleModelAPIView
 from django.db.models import Sum, F, Q
 
 # generics 에 목록과 생성 API 가 정의되어 있다
-from busking.models import Post
+from busking.models import Post, supportCoin
 from busking.serializers import LikePostSerializer, SupportCoinSerializer
 from rentLocation.serializers import ReservationPracticeRoomSerializer
 
@@ -309,6 +309,22 @@ class ChangePasswordView(UpdateAPIView):
             return Response("Success.", status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserCoinManagement(FlatMultipleModelAPIView):
+    def get_querylist(self):
+        user = self.kwargs['user']
+        start_date = self.kwargs['start_date']
+        end_date = self.kwargs['end_date']
+
+        querylist = [
+            {'queryset': Purchase.objects.filter(user=user).exclude(purchase_date__lte=start_date, purchase_date__gte=end_date), 'serializer_class': PurchaseCoinSerializer, 'label': 'purchase'},
+            {'queryset': supportCoin.objects.filter(user=user).exclude(supportDate__lte=start_date, supportDate__gte=end_date), 'serializer_class': SupportCoinSerializer, 'label': 'support'}
+        ]
+
+        return querylist
+
+
 
 #
 # def push_notify(data):

@@ -49,8 +49,11 @@ urlpatterns = [
     #구입한 코인 리스트
     url(r'^purchaseCoin/(?P<pk>\d+)/$', views.PurchaseCoinView.as_view()),
 
+    #코인 통계
+    url(r'^userCoinManagement/(?P<user>\d+)/(?P<start_date>[-\w]+)/(?P<end_date>[-\w]+)/$', views.UserCoinManagement.as_view()),
+
     #예약한 연습실 리스트
-    url(r'reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view())
+    url(r'^reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

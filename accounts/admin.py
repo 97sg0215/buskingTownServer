@@ -19,9 +19,14 @@ class ConnectionInline(admin.StackedInline):
     can_delete = True
     verbose_name_plural = 'connection'
 
+class PurchaseCoinInline(admin.StackedInline):
+    model = Purchase
+    can_delete = True
+    verbose_name_plural = 'purchase_coin'
+
 
 class UserAdmin(BaseUserAdmin):
-    inlines = (ProfileInline, BuskerInline, ConnectionInline)
+    inlines = (ProfileInline, BuskerInline, ConnectionInline, PurchaseCoinInline)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

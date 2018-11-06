@@ -29,6 +29,7 @@ class supportCoin(models.Model):
     support_message = models.CharField(max_length=400, null=True)
     coin_amount = models.IntegerField(null=False)
     supportDate = models.DateField(auto_now_add=True, auto_created=True)
+    coin_balance = models.IntegerField(null=True)
 
 
 

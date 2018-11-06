@@ -97,5 +97,6 @@ class Purchase(models.Model):
     user = models.ForeignKey(User, unique=False, on_delete=models.CASCADE)
     purchase_coin_amount = models.IntegerField(null=True)
     purchase_date = models.DateField(auto_now_add=True, auto_created=True)
+    coin_balance = models.IntegerField(null=True)
 
 

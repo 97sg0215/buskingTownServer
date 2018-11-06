@@ -318,8 +318,8 @@ class UserCoinManagement(FlatMultipleModelAPIView):
         end_date = self.kwargs['end_date']
 
         querylist = [
-            {'queryset': Purchase.objects.filter(user=user).exclude(purchase_date__lte=start_date, purchase_date__gte=end_date), 'serializer_class': PurchaseCoinSerializer, 'label': 'purchase'},
-            {'queryset': supportCoin.objects.filter(user=user).exclude(supportDate__lte=start_date, supportDate__gte=end_date), 'serializer_class': SupportCoinSerializer, 'label': 'support'}
+            {'queryset': Purchase.objects.filter(user=user, purchase_date__gte=start_date, purchase_date__lte=end_date), 'serializer_class': PurchaseCoinSerializer, 'label': 'purchase'},
+            {'queryset': supportCoin.objects.filter(user=user, supportDate__gte=start_date, supportDate__lte=end_date), 'serializer_class': SupportCoinSerializer, 'label': 'support'}
         ]
 
         return querylist

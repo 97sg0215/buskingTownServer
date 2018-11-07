@@ -79,7 +79,7 @@ class Busker(models.Model):
 
     def get_coin(self):
         from busking.models import supportCoin
-        supportCoin = supportCoin.objects.filter(busker=self.busker_id)
+        supportCoin = supportCoin.objects.filter(busker=self.busker_id, view_check=False)
         return supportCoin
 
     def get_practice_reservation(self):
@@ -96,7 +96,7 @@ class Purchase(models.Model):
     purchase_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, on_delete=models.CASCADE)
     purchase_coin_amount = models.IntegerField(null=True)
-    purchase_date = models.DateField(auto_now_add=True, auto_created=True)
+    date_created = models.DateField(auto_now_add=True, auto_created=True)
     coin_balance = models.IntegerField(null=True)
 
 

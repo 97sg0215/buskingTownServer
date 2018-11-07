@@ -1,5 +1,6 @@
 # 클래스 기반의 Rest CRUD 처리
 import operator
+from itertools import chain
 
 from django.http import Http404
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -312,18 +313,17 @@ class ChangePasswordView(UpdateAPIView):
 
 
 class UserCoinManagement(FlatMultipleModelAPIView):
+    sorting_fields = ['-date_created']
     def get_querylist(self):
         user = self.kwargs['user']
         start_date = self.kwargs['start_date']
         end_date = self.kwargs['end_date']
 
         querylist = [
-            {'queryset': Purchase.objects.filter(user=user, purchase_date__gte=start_date, purchase_date__lte=end_date), 'serializer_class': PurchaseCoinSerializer, 'label': 'purchase'},
-            {'queryset': supportCoin.objects.filter(user=user, supportDate__gte=start_date, supportDate__lte=end_date), 'serializer_class': SupportCoinSerializer, 'label': 'support'}
+            {'queryset': Purchase.objects.filter(user=user, date_created__gte=start_date, date_created__lte=end_date), 'serializer_class': PurchaseCoinSerializer, 'label': 'purchase'},
+            {'queryset': supportCoin.objects.filter(user=user, date_created__gte=start_date, date_created__lte=end_date), 'serializer_class': SupportCoinSerializer, 'label': 'support'}
         ]
-
         return querylist
-
 
 
 #

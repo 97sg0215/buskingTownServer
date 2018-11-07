@@ -28,8 +28,9 @@ class supportCoin(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     support_message = models.CharField(max_length=400, null=True)
     coin_amount = models.IntegerField(null=False)
-    supportDate = models.DateField(auto_now_add=True, auto_created=True)
+    date_created = models.DateField(auto_now_add=True, auto_created=True)
     coin_balance = models.IntegerField(null=True)
+    view_check = models.BooleanField(default=False)
 
 
 

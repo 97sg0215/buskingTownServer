@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^unlikePost/(?P<pk>\d+)/$', views.LikePostView.as_view()),
 
     url(r'^supportCoin/$', views.supportCoinView.as_view()),
+    url(r'^supportCoin/(?P<pk>\d+)/$', views.supportCoinView.as_view()),
     url(r'^supportCoinDelete/(?P<pk>\d+)/$', views.supportCoinView.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

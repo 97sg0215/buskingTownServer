@@ -313,7 +313,7 @@ class ChangePasswordView(UpdateAPIView):
 
 
 class UserCoinManagement(FlatMultipleModelAPIView):
-    sorting_fields = ['-date_created']
+    sorting_fields = ['-time_created']
     def get_querylist(self):
         user = self.kwargs['user']
         start_date = self.kwargs['start_date']

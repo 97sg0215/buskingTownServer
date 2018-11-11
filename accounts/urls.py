@@ -53,7 +53,10 @@ urlpatterns = [
     url(r'^userCoinManagement/(?P<user>\d+)/(?P<start_date>[-\w]+)/(?P<end_date>[-\w]+)/$', views.UserCoinManagement.as_view()),
 
     #예약한 연습실 리스트
-    url(r'^reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view())
+    url(r'^reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view()),
+
+    #예약한 거리콘서트 리스트
+    url(r'^reservationRoadConcertList/(?P<pk>\d+)/$', views.RoadConcertList.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

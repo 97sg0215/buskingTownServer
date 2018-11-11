@@ -23,7 +23,7 @@ from django.db.models import Sum, F, Q
 
 # generics 에 목록과 생성 API 가 정의되어 있다
 from busking.models import Post, supportCoin
-from busking.serializers import LikePostSerializer, SupportCoinSerializer
+from busking.serializers import LikePostSerializer, SupportCoinSerializer, RoadConcertSerializer
 from rentLocation.serializers import ReservationPracticeRoomSerializer
 
 
@@ -219,6 +219,20 @@ class PracticeList(APIView):
         event = self.get_object(pk)
         room = event.get_practice_reservation()
         serializer = ReservationPracticeRoomSerializer(room, many=True)
+        return Response(serializer.data)
+
+
+class RoadConcertList(APIView):
+    def get_object(self, pk):
+        try:
+            return Busker.objects.get(pk=pk)
+        except Busker.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        road = event.get_road_reservation()
+        serializer = RoadConcertSerializer(road, many=True)
         return Response(serializer.data)
 
 

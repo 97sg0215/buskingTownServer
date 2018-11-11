@@ -26,7 +26,11 @@ urlpatterns = [
 
     url(r'^supportCoin/$', views.supportCoinView.as_view()),
     url(r'^supportCoin/(?P<pk>\d+)/$', views.supportCoinView.as_view()),
-    url(r'^supportCoinDelete/(?P<pk>\d+)/$', views.supportCoinView.as_view())
+    url(r'^supportCoinDelete/(?P<pk>\d+)/$', views.supportCoinView.as_view()),
+
+    #길거리 예약
+    url(r'^reservationRoadConcert/$', views.RoadConcertView.as_view()),
+    url(r'^reservationCheckRoadConcert/(?P<road_address>[-\w]+)/(?P<road_concert_date>[-\w]+)/$', views.ReservationRoadConcert.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

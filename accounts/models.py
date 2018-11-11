@@ -87,6 +87,11 @@ class Busker(models.Model):
         practiceRoom = ReservationPracticeRoom.objects.filter(busker=self.busker_id)
         return practiceRoom
 
+    def get_road_reservation(self):
+        from busking.models import RoadConcert
+        road = RoadConcert.objects.filter(busker=self.busker_id)
+        return road
+
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from busking.models import Post, LikePost, supportCoin
+from busking.models import Post, LikePost, supportCoin, RoadConcert
 
 
 #게시물 작성 객체 직렬화
@@ -17,4 +17,9 @@ class LikePostSerializer(serializers.ModelSerializer):
 class SupportCoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = supportCoin
+        fields = ('__all__')
+
+class RoadConcertSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoadConcert
         fields = ('__all__')

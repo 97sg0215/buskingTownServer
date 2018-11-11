@@ -6,8 +6,8 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 
 from accounts.models import Busker
-from busking.models import Post, LikePost, supportCoin
-from busking.serializers import PostSerializer, LikePostSerializer, SupportCoinSerializer
+from busking.models import Post, LikePost, supportCoin, RoadConcert
+from busking.serializers import PostSerializer, LikePostSerializer, SupportCoinSerializer, RoadConcertSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from rest_framework import generics
@@ -71,23 +71,6 @@ class PostList(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-# class LikePostView(APIView):
-#     def get_object(self, pk):
-#         try:
-#             return Busker.objects.get(pk=pk)
-#         except Busker.DoesNotExist:
-#             raise Http404
-#
-#     def get(self, request, pk, format=None):
-#         event = self.get_object(pk)
-#         posts = event.get_like()
-#         serializer = LikePostSerializer(posts, many=True)
-#         return Response(serializer.data)
-#
-#     def delete(self, request, pk, format=None):
-#         event = self.get_object(pk)
-#         event.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class LikePostView(generics.CreateAPIView):
     queryset = LikePost.objects.all()
@@ -152,3 +135,52 @@ class supportCoinView(generics.CreateAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RoadConcertView(generics.CreateAPIView):
+    queryset = RoadConcert.objects.all()
+    serializer_class = RoadConcertSerializer
+
+    def get_object(self, pk):
+        try:
+            return RoadConcert.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        event = self.get_object(pk)
+        serializer = RoadConcertSerializer(event)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer_class = RoadConcertSerializer(data=request.data)
+        if serializer_class.is_valid():
+            serializer_class.save()
+            return Response(serializer_class.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        event = self.get_object(pk)
+        event.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, pk, format=None):
+        RoadConcert = self.get_object(pk)
+        serializer = SupportCoinSerializer(RoadConcert, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#예약된거 보기
+class ReservationRoadConcert(generics.ListAPIView):
+   serializer_class = RoadConcertSerializer
+   def get_queryset(self):
+       """
+       This view should return a list of all the purchases for
+       the user as determined by the username portion of the URL.
+       """
+       road_address = self.kwargs['road_address']
+       road_concert_date = self.kwargs['road_concert_date']
+
+       return RoadConcert.objects.filter(road_address=road_address, road_concert_date=road_concert_date)

@@ -90,12 +90,12 @@ class Busker(models.Model):
 
     def get_previous_road_reservation(self):
         from busking.models import RoadConcert
-        road = RoadConcert.objects.filter(busker=self.busker_id).exclude(road_concert_date__gte=timezone.now().date()).order_by('-road_concert_date')
+        road = RoadConcert.objects.filter(busker=self.busker_id, road_concert_date__lte=timezone.now()).order_by('-road_concert_date')
         return road
 
     def get_next_road_reservation(self):
         from busking.models import RoadConcert
-        road = RoadConcert.objects.filter(busker=self.busker_id).exclude(road_concert_date__lte=timezone.now().date()).order_by('road_concert_date')
+        road = RoadConcert.objects.filter(busker=self.busker_id, road_concert_date__gte=timezone.now()).order_by('road_concert_date')
         return road
 
 class Connections(models.Model):

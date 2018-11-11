@@ -30,7 +30,8 @@ urlpatterns = [
 
     #길거리 예약
     url(r'^reservationRoadConcert/$', views.RoadConcertView.as_view()),
-    url(r'^reservationCheckRoadConcert/(?P<road_address>[ㄱ-힣]+)/(?P<road_concert_date>[-\w]+)/$', views.ReservationRoadConcert.as_view())
+    url(r'^reservationCheckRoadConcert/(?P<road_address>[ㄱ-힣]+)/(?P<road_concert_date>[-\w]+)/$', views.ReservationRoadConcert.as_view()),
+    url(r'^liveBusking/(?P<road_concert_date>[-\w]+)/(?P<current_time>[:\w]+)/$', views.LiveRoadConcertView.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

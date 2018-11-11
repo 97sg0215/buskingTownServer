@@ -172,6 +172,20 @@ class RoadConcertView(generics.CreateAPIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#실시간 버스킹
+class LiveRoadConcertView(generics.ListAPIView):
+   serializer_class = RoadConcertSerializer
+
+   def get_queryset(self):
+       """
+       This view should return a list of all the purchases for
+       the user as determined by the username portion of the URL.
+       """
+       road_concert_date = self.kwargs['road_concert_date']
+       current_time = self.kwargs['current_time']
+
+       return RoadConcert.objects.filter(road_concert_date=road_concert_date, road_concert_start_time__lte=current_time, road_concert_end_time__gte=current_time)
+
 #예약된거 보기
 class ReservationRoadConcert(generics.ListAPIView):
    serializer_class = RoadConcertSerializer

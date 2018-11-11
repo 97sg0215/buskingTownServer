@@ -222,7 +222,7 @@ class PracticeList(APIView):
         return Response(serializer.data)
 
 
-class RoadConcertList(APIView):
+class PreviousRoadConcertList(APIView):
     def get_object(self, pk):
         try:
             return Busker.objects.get(pk=pk)
@@ -231,10 +231,23 @@ class RoadConcertList(APIView):
 
     def get(self, request, pk,format=None):
         event = self.get_object(pk)
-        road = event.get_road_reservation()
+        road = event.get_previous_road_reservation()
         serializer = RoadConcertSerializer(road, many=True)
         return Response(serializer.data)
 
+
+class NextRoadConcertList(APIView):
+    def get_object(self, pk):
+        try:
+            return Busker.objects.get(pk=pk)
+        except Busker.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        road = event.get_next_road_reservation()
+        serializer = RoadConcertSerializer(road, many=True)
+        return Response(serializer.data)
 
 
 #이미지 전송을 위해 json형식이 아닌 formparser로 데이터 전송

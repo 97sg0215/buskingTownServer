@@ -55,8 +55,10 @@ urlpatterns = [
     #예약한 연습실 리스트
     url(r'^reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view()),
 
-    #예약한 거리콘서트 리스트
-    url(r'^reservationRoadConcertList/(?P<pk>\d+)/$', views.RoadConcertList.as_view())
+    #예약한 거리콘서트 리스트 예전꺼
+    url(r'^previousRoadConcertList/(?P<pk>\d+)/$', views.PreviousRoadConcertList.as_view()),
+    #예약한 거리콘서트 리스트 앞으로꺼
+    url(r'^nextRoadConcertList/(?P<pk>\d+)/$', views.NextRoadConcertList.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

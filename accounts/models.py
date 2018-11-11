@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from buskingTownServer import settings
 from rest_framework.authtoken.models import Token
 from django.db.models import F, Sum, Count, Case, When, Value
+from django.utils import timezone
 
 #장고 기본 제공 되는 user 모델과 1대1매핑 하여 확장
 class Profile(models.Model):
@@ -87,9 +88,14 @@ class Busker(models.Model):
         practiceRoom = ReservationPracticeRoom.objects.filter(busker=self.busker_id)
         return practiceRoom
 
-    def get_road_reservation(self):
+    def get_previous_road_reservation(self):
         from busking.models import RoadConcert
-        road = RoadConcert.objects.filter(busker=self.busker_id)
+        road = RoadConcert.objects.filter(busker=self.busker_id).exclude(road_concert_date__gte=timezone.now().date()).order_by('-road_concert_date')
+        return road
+
+    def get_next_road_reservation(self):
+        from busking.models import RoadConcert
+        road = RoadConcert.objects.filter(busker=self.busker_id).exclude(road_concert_date__lte=timezone.now().date()).order_by('road_concert_date')
         return road
 
 class Connections(models.Model):

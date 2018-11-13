@@ -32,7 +32,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ConnectionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Connections
-        fields = ('connection_id', 'user', 'following')
+        fields = ('connection_id', 'user', 'following', 'connection_date')
 
 class ScoreSerializer(serializers.ModelSerializer):
     follower_count = serializers.SerializerMethodField()

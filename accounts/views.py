@@ -76,6 +76,56 @@ class BuskerList(viewsets.ModelViewSet):
     queryset = Busker.objects.all()
     serializer_class = BuskerSerializer
 
+class ConnectionStatisticList(generics.ListAPIView):
+   serializer_class = ConnectionsSerializer
+
+   def get_queryset(self):
+       """
+       This view should return a list of all the purchases for
+       the user as determined by the username portion of the URL.
+       """
+       road_concert_date = self.kwargs['road_concert_date']
+       current_time = self.kwargs['current_time']
+
+       return Connections.objects.filter(road_concert_date=road_concert_date, road_concert_start_time__lte=current_time, road_concert_end_time__gte=current_time)
+
+class ConnectionStatisticList(generics.ListAPIView):
+    serializer_class = ConnectionsSerializer
+
+    def get_queryset(self):
+       """
+           This view should return a list of all the purchases for
+           the user as determined by the username portion of the URL.
+           """
+       busker = self.kwargs['busker']
+       queryset = Connections.objects.filter(following=busker).values('following','connection_date').annotate(follower_count=Count('following'))
+
+       return queryset
+
+class ConnectionStatisticList(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    serializer_class = ConnectionsSerializer
+
+    def get_queryset(self):
+        """
+            This view should return a list of all the purchases for
+            the user as determined by the username portion of the URL.
+            """
+        busker = self.kwargs['busker']
+        start_date = self.kwargs['start_date']
+        end_date = self.kwargs['end_date']
+
+        queryset = Connections.objects.filter(following=busker, connection_date__gte=start_date, connection_date__lte=end_date).values('following', 'connection_date').annotate(
+            follower_count=Count('following'))
+
+        return queryset.distinct();
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        return Response(queryset)
+
 class ConnectionList(viewsets.ModelViewSet):
     queryset = Connections.objects.all()
     serializer_class = ConnectionsSerializer

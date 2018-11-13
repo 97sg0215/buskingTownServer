@@ -98,10 +98,12 @@ class Busker(models.Model):
         road = RoadConcert.objects.filter(busker=self.busker_id, road_concert_date__gte=timezone.now()).order_by('road_concert_date')
         return road
 
+
 class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
     following = models.ForeignKey(Busker, unique=False, related_name="friend_set", on_delete=models.CASCADE)
+    connection_date = models.DateField(null=True)
 
 class Purchase(models.Model):
     purchase_id = models.AutoField(primary_key=True)

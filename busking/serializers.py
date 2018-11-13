@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from accounts.models import Connections
 from busking.models import Post, LikePost, supportCoin, RoadConcert
 
 

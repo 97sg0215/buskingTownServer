@@ -51,6 +51,8 @@ urlpatterns = [
 
     #코인 통계
     url(r'^userCoinManagement/(?P<user>\d+)/(?P<start_date>[-\w]+)/(?P<end_date>[-\w]+)/$', views.UserCoinManagement.as_view()),
+    #팔로워 통계
+    url(r'^followerStatics/(?P<busker>\d+)/(?P<start_date>[-\w]+)/(?P<end_date>[-\w]+)/$', views.ConnectionStatisticList.as_view({'get': 'list'})),
 
     #예약한 연습실 리스트
     url(r'^reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view()),

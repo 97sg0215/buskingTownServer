@@ -39,16 +39,11 @@ class RoadConcert(models.Model):
     road_concert_id = models.AutoField(primary_key=True)
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
     road_address = models.CharField(max_length=100)
-    road_lon = models.DecimalField(null=True, decimal_places=10, max_digits=10)
-    road_lat = models.DecimalField(null=True, decimal_places=10, max_digits=10)
+    road_lon = models.DecimalField(null=True, decimal_places=30, max_digits=100)
+    road_lat = models.DecimalField(null=True, decimal_places=30, max_digits=100)
     road_name = models.CharField(max_length=50)
     road_concert_date = models.DateField()
     road_concert_start_time = models.TimeField()
     road_concert_end_time = models.TimeField()
-
-# class BuskerFollowerStatistics(models.Model):
-#     follower_statistics_id = models.AutoField(primary_key=True)
-#     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
-#     follower_count_statistics_date = models.DateTimeField(auto_now_add=True, auto_created=True, null=True)
 
 

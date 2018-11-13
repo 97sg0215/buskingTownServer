@@ -28,5 +28,9 @@ class PurchaseCoinInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = (ProfileInline, BuskerInline, ConnectionInline, PurchaseCoinInline)
 
+class FollowerStatics(admin.ModelAdmin):
+    list_display = ('connection_id', 'user', 'following', 'connection_date')
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+admin.site.register(Connections, FollowerStatics)

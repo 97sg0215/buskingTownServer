@@ -103,7 +103,7 @@ class Connections(models.Model):
     connection_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, unique=False, related_name="friendship_creator_set", on_delete=models.CASCADE)
     following = models.ForeignKey(Busker, unique=False, related_name="friend_set", on_delete=models.CASCADE)
-    connection_date = models.DateField(null=True)
+    connection_date = models.DateField(null=True, auto_now_add=True, auto_created=True)
 
 class Purchase(models.Model):
     purchase_id = models.AutoField(primary_key=True)

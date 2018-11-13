@@ -126,7 +126,7 @@ class ConcertRoomList(viewsets.ModelViewSet):
 
     # 오늘 날짜
     today_date = timezone.now().date()
-    queryset = Provide.objects.filter(provide_type=2).exclude(provide_end_date__lte=timezone.now().date()).prefetch_related('reservation_provide')
+    queryset = Provide.objects.filter(provide_type=2).exclude(provide_end_date__lte=timezone.now().date()).prefetch_related('reservation_concert_provide')
     serializer_class = ProvideSerializer
 
 

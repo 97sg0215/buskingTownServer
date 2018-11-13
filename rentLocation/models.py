@@ -46,8 +46,8 @@ class ProvideOption(models.Model):
 
 class ReservationPracticeRoom(models.Model):
     busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
-    provide = models.ForeignKey(Provide, on_delete=models.CASCADE, related_name='reservation_provide')
-    provide_option = models.ForeignKey(ProvideOption, on_delete=models.CASCADE, related_name='reservation_provide_option')
+    provide = models.ForeignKey(Provide, on_delete=models.CASCADE, related_name='reservation_concert_provide')
+    provide_option = models.ForeignKey(ProvideOption, on_delete=models.CASCADE, related_name='reservation_concert_provide_option')
     reservation_id = models.AutoField(primary_key=True)
     practice_date = models.DateField(null=False)
     practice_start_time = models.TimeField(null=False)

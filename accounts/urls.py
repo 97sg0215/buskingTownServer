@@ -56,6 +56,8 @@ urlpatterns = [
 
     #예약한 연습실 리스트
     url(r'^reservationRoomCheck/(?P<pk>\d+)/$', views.PracticeList.as_view()),
+    #예약한 콘서트 리스트
+    url(r'^reservationConcertCheck/(?P<pk>\d+)/$', views.ConcertList.as_view()),
 
     #예약한 거리콘서트 리스트 예전꺼
     url(r'^previousRoadConcertList/(?P<pk>\d+)/$', views.PreviousRoadConcertList.as_view()),

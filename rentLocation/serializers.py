@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 #버스커 객체 직렬화
-from rentLocation.models import ProvideOption, Provide, ReservationPracticeRoom
+from rentLocation.models import ProvideOption, Provide, ReservationPracticeRoom, ReservationConcertRoom
 
 
 class ProvideOptionSerializer(serializers.ModelSerializer):
@@ -35,6 +35,11 @@ class ProvideSerializer(serializers.ModelSerializer):
 class ReservationPracticeRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReservationPracticeRoom
+        fields = ('__all__')
+
+class ReservationConcertRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReservationConcertRoom
         fields = ('__all__')
 
 

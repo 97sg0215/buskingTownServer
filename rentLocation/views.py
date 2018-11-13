@@ -12,8 +12,9 @@ from rest_framework.views import APIView
 
 from accounts.models import Profile
 from rentLocation import models
-from rentLocation.models import Provide, ProvideOption, ReservationPracticeRoom
-from rentLocation.serializers import ProvideSerializer, ProvideOptionSerializer, ReservationPracticeRoomSerializer
+from rentLocation.models import Provide, ProvideOption, ReservationPracticeRoom, ReservationConcertRoom
+from rentLocation.serializers import ProvideSerializer, ProvideOptionSerializer, ReservationPracticeRoomSerializer, \
+    ReservationConcertRoomSerializer
 
 from django.db.models import Sum, F, Q
 
@@ -119,7 +120,13 @@ class PracticeRoomList(viewsets.ModelViewSet):
 
 
 class ConcertRoomList(viewsets.ModelViewSet):
-    queryset = Provide.objects.filter(provide_type=2)
+    # 제공하는 날짜와 시간
+    available_start_date = Provide.objects.values('provide_start_date')
+    available_end_date = Provide.objects.values('provide_end_date')
+
+    # 오늘 날짜
+    today_date = timezone.now().date()
+    queryset = Provide.objects.filter(provide_type=2).exclude(provide_end_date__lte=timezone.now().date()).prefetch_related('reservation_provide')
     serializer_class = ProvideSerializer
 
 
@@ -161,6 +168,54 @@ class Reservation(APIView):
     def put(self, request, pk, format=None):
         event = self.get_object(pk)
         serializer = ReservationPracticeRoomSerializer(event, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        event = self.get_object(pk)
+        event.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#콘서트
+class ReservationConcert(generics.ListAPIView):
+   serializer_class = ReservationConcertRoomSerializer
+
+   def get_queryset(self):
+       """
+       This view should return a list of all the purchases for
+       the user as determined by the username portion of the URL.
+       """
+       provide = self.kwargs['provide']
+       provide_option = self.kwargs['provide_option']
+       concert_date = self.kwargs['concert_date']
+
+       return ReservationPracticeRoom.objects.filter(provide=provide, provide_option=provide_option, concert_date=concert_date)
+
+class ReservationConcertRoomView(APIView):
+    def get_object(self, pk):
+        try:
+            return ReservationConcertRoom.objects.get(pk=pk)
+        except ReservationConcertRoom.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk,format=None):
+        event = self.get_object(pk)
+        serializer = ReservationConcertRoomSerializer(event)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer_class = ReservationConcertRoomSerializer(data=request.data)
+        if serializer_class.is_valid():
+            serializer_class.save()
+            return Response(serializer_class.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk, format=None):
+        event = self.get_object(pk)
+        serializer = ReservationConcertRoomSerializer(event, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

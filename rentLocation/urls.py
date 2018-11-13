@@ -27,7 +27,14 @@ urlpatterns = [
     #예약하기
     url(r'^reservationPracticeRoom/$', views.Reservation.as_view()),
     #예약취소
-    url(r'^cancelReservationPracticeRoom/(?P<pk>\d+)/$', views.Reservation.as_view())
+    url(r'^cancelReservationPracticeRoom/(?P<pk>\d+)/$', views.Reservation.as_view()),
+
+    #예약보기
+    url(r'^reservationConcertRoom/(?P<provide>\d+)/(?P<provide_option>\d+)/(?P<concert_date>[-\w]+)/$', views.ReservationConcert.as_view()),
+    #예약하기
+    url(r'^reservationConcertRoom/$', views. ReservationConcertRoomView.as_view()),
+    #예약취소
+    url(r'^cancelReservationConcertRoom/(?P<pk>\d+)/$', views. ReservationConcertRoomView.as_view())
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

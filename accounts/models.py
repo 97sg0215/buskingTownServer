@@ -88,6 +88,11 @@ class Busker(models.Model):
         practiceRoom = ReservationPracticeRoom.objects.filter(busker=self.busker_id)
         return practiceRoom
 
+    def get_concert_reservation(self):
+        from rentLocation.models import ReservationConcertRoom
+        concertRoom = ReservationConcertRoom.objects.filter(busker=self.busker_id)
+        return concertRoom
+
     def get_previous_road_reservation(self):
         from busking.models import RoadConcert
         road = RoadConcert.objects.filter(busker=self.busker_id, road_concert_date__lte=timezone.now()).order_by('-road_concert_date')

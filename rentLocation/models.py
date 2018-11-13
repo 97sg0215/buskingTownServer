@@ -54,4 +54,14 @@ class ReservationPracticeRoom(models.Model):
     practice_end_time = models.TimeField(null=False)
     practice_fee = models.IntegerField(null=False)
 
+class ReservationConcertRoom(models.Model):
+    busker = models.ForeignKey(Busker, on_delete=models.CASCADE)
+    provide = models.ForeignKey(Provide, on_delete=models.CASCADE, related_name='reservation_provide')
+    provide_option = models.ForeignKey(ProvideOption, on_delete=models.CASCADE, related_name='reservation_provide_option')
+    concert_reservation_id = models.AutoField(primary_key=True)
+    concert_date = models.DateField(null=False)
+    concert_start_time = models.TimeField(null=False)
+    concert_end_time = models.TimeField(null=False)
+    concert_fee = models.IntegerField(null=False)
+
 

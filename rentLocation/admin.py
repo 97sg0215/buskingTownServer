@@ -15,3 +15,4 @@ class ProvideAdmin(admin.ModelAdmin):
 admin.site.register(Provide, ProvideAdmin)
 admin.site.register(ProvideOption)
 admin.site.register(ReservationPracticeRoom)
+admin.site.register(ReservationConcertRoom)

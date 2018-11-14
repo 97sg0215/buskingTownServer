@@ -30,9 +30,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ConnectionsSerializer(serializers.ModelSerializer):
+    follower_count = serializers.IntegerField()
     class Meta:
         model = Connections
-        fields = ('connection_id', 'user', 'following', 'connection_date')
+        fields = ('connection_id', 'user', 'following', 'follower_count', 'connection_date')
 
 class ScoreSerializer(serializers.ModelSerializer):
     follower_count = serializers.SerializerMethodField()

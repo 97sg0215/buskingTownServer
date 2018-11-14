@@ -120,9 +120,6 @@ class ConnectionStatisticList(viewsets.ModelViewSet):
         queryset = Connections.objects.filter(following=busker, connection_date__gte=start_date, connection_date__lte=end_date)
         return queryset
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        return Response(queryset)
 
 class ConnectionList(viewsets.ModelViewSet):
     queryset = Connections.objects.all()

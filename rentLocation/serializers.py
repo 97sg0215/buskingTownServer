@@ -29,7 +29,7 @@ class ProvideSerializer(serializers.ModelSerializer):
         model = Provide
         fields = ('provide_id', 'user', 'provide_location_name', 'provide_type', 'provide_image', 'provider_phone', 'provider_email', 'provide_start_date',
                   'provide_end_date', 'provide_start_time', 'provide_end_time', 'provide_location', 'provide_description', 'provide_rule',
-                  'provide_refund_rule',)
+                  'provide_refund_rule', 'provide_lon', 'provide_lat')
 
 
 class ReservationPracticeRoomSerializer(serializers.ModelSerializer):

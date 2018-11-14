@@ -20,6 +20,8 @@ class Provide(models.Model):
     provide_start_time = models.TimeField(null=False)
     provide_end_time = models.TimeField(null=False)
     provide_location = models.CharField(null=False,max_length=200)
+    provide_lon = models.DecimalField(null=True, decimal_places=30, max_digits=100)
+    provide_lat = models.DecimalField(null=True, decimal_places=30, max_digits=100)
     provide_description = models.CharField(null=False,max_length=200)
     provide_rule = models.CharField(null=False, max_length=500)
     provide_refund_rule = models.CharField(null=False, max_length=500)

@@ -118,7 +118,7 @@ class ConnectionStatisticList(viewsets.ModelViewSet):
         end_date = self.kwargs['end_date']
 
         queryset = Connections.objects.filter(following=busker, connection_date__gte=start_date, connection_date__lte=end_date).values('following', 'connection_date').annotate(
-            follower_count=Count('following'))
+            follower_count=Count('following')).order_by('connection_date')
 
         return queryset.distinct();
 

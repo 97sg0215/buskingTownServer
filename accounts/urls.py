@@ -36,6 +36,8 @@ urlpatterns = [
     url(r'^delete/(?P<pk>\d+)/$', views.BuskerView.as_view()),
     #버스커확인 url
     url(r'^buskerDetail/(?P<pk>\d+)/$', views.BuskerView.as_view()),
+    #버스커 Team 확익
+    url(r'^buskerTeamCheck/(?P<team_name>.*)/$', views.BuskerTeamList.as_view()),
 
     #버스커 랭킹 정렬
     url(r'^buskerRank/$', views.ScoreListView.as_view()),

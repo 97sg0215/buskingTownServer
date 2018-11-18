@@ -76,31 +76,18 @@ class BuskerList(viewsets.ModelViewSet):
     queryset = Busker.objects.all()
     serializer_class = BuskerSerializer
 
-class ConnectionStatisticList(generics.ListAPIView):
-   serializer_class = ConnectionsSerializer
+class BuskerTeamList(generics.ListAPIView):
+   serializer_class = BuskerSerializer
 
    def get_queryset(self):
        """
        This view should return a list of all the purchases for
        the user as determined by the username portion of the URL.
        """
-       road_concert_date = self.kwargs['road_concert_date']
-       current_time = self.kwargs['current_time']
+       team_name = self.kwargs['team_name']
 
-       return Connections.objects.filter(road_concert_date=road_concert_date, road_concert_start_time__lte=current_time, road_concert_end_time__gte=current_time)
+       return Busker.objects.filter(team_name=team_name, busker_type=1)
 
-class ConnectionStatisticList(generics.ListAPIView):
-    serializer_class = ConnectionsSerializer
-
-    def get_queryset(self):
-       """
-           This view should return a list of all the purchases for
-           the user as determined by the username portion of the URL.
-           """
-       busker = self.kwargs['busker']
-       queryset = Connections.objects.filter(following=busker).values('following','connection_date').annotate(follower_count=Count('following'))
-
-       return queryset
 
 class ConnectionStatisticList(viewsets.ModelViewSet):
     """

@@ -86,7 +86,7 @@ class BuskerTeamList(generics.ListAPIView):
        """
        team_name = self.kwargs['team_name']
 
-       return Busker.objects.filter(team_name=team_name, busker_type=1)
+       return Busker.objects.filter(team_name=team_name).order_by('busker_type')
 
 
 class ConnectionStatisticList(viewsets.ModelViewSet):

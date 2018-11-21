@@ -191,7 +191,7 @@ class ReservationConcert(generics.ListAPIView):
        provide_option = self.kwargs['provide_option']
        concert_date = self.kwargs['concert_date']
 
-       return ReservationPracticeRoom.objects.filter(provide=provide, provide_option=provide_option, concert_date=concert_date)
+       return ReservationConcertRoom.objects.filter(provide=provide, provide_option=provide_option, concert_date=concert_date)
 
 class ReservationConcertRoomView(APIView):
     def get_object(self, pk):

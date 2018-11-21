@@ -34,8 +34,8 @@ urlpatterns = [
     url(r'^reservationCheckRoadConcert/(?P<road_address>.*)/(?P<road_concert_date>[-\w]+)/$', views.ReservationRoadConcert.as_view()),
     url(r'^liveBusking/(?P<road_concert_date>[-\w]+)/(?P<current_time>[:\w]+)/$', views.LiveRoadConcertView.as_view()),
 
-    #통계보기
-  #  url(r'^followerStatics/$', views.BuskerFollowerStatistic.as_view())
+    #받은 코인 통계
+    url(r'^supportCoinStatics/(?P<busker>\d+)/(?P<start_date>[-\w]+)/(?P<end_date>[-\w]+)/$', views.SupportCoinStatisticList.as_view({'get': 'list'}))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -138,6 +138,30 @@ class supportCoinView(generics.CreateAPIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class SupportCoinStatisticList(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    serializer_class = SupportCoinSerializer
+
+    def get_queryset(self):
+        """
+            This view should return a list of all the purchases for
+            the user as determined by the username portion of the URL.
+            """
+        busker = self.kwargs['busker']
+        start_date = self.kwargs['start_date']
+        end_date = self.kwargs['end_date']
+
+        queryset = supportCoin.objects.filter(busker=busker, date_created__gte=start_date, date_created__lte=end_date).values('coin_amount', 'date_created').annotate(
+            follower_count=Count('coin_amount')).order_by('date_created')
+
+        return queryset.distinct();
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        return Response(queryset)
+
 class RoadConcertView(generics.CreateAPIView):
     queryset = RoadConcert.objects.all()
     serializer_class = RoadConcertSerializer

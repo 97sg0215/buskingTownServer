@@ -153,8 +153,8 @@ class SupportCoinStatisticList(viewsets.ModelViewSet):
         start_date = self.kwargs['start_date']
         end_date = self.kwargs['end_date']
 
-        queryset = supportCoin.objects.filter(busker=busker, date_created__gte=start_date, date_created__lte=end_date).values('coin_amount', 'date_created').annotate(
-            follower_count=Count('coin_amount')).order_by('date_created')
+        queryset = supportCoin.objects.filter(busker=busker, date_created__gte=start_date, date_created__lte=end_date).values('busker', 'date_created').annotate(
+            daily_coin_amount=Count('coin_amount')).order_by('date_created')
 
         return queryset.distinct();
 

@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count,Sum
 from django.shortcuts import render
 
 # Create your views here.
@@ -154,7 +154,7 @@ class SupportCoinStatisticList(viewsets.ModelViewSet):
         end_date = self.kwargs['end_date']
 
         queryset = supportCoin.objects.filter(busker=busker, date_created__gte=start_date, date_created__lte=end_date).values('busker', 'date_created').annotate(
-            daily_coin_amount=Count('coin_amount')).order_by('date_created')
+            daily_coin_amount=Sum('coin_amount')).order_by('date_created')
 
         return queryset.distinct();
 
